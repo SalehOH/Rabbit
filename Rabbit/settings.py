@@ -60,6 +60,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "Rabbit.urls"
 
+#Backend Auth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -130,3 +136,35 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+#Redirect Links
+LOGIN_URL = 'account_login'
+
+#allauth config
+SITE_ID = 1
+SOCIALACCOUNT_AUTO_SIGNUP = False
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_USERNAME_MIN_LENGTH = 5
+
+#Google login api config
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': "",
+            'secret': "",
+            'key': ''
+        },
+        'SCOPE': [
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'prompt': 'select_account',
+            'access_type': 'online',
+        },
+        'LOGIN_PARAMS': {'auth_type': 'reauthenticate'},
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}

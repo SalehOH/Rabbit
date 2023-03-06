@@ -1,0 +1,10 @@
+.venv
+*.pyc
+*~
+__pycahe__
+.vscode
+.DS_Store
+db.sqlite3
+.cache
+.anaconda
+.env

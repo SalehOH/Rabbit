@@ -18,3 +18,29 @@ def post_image_filename(instance, filename):
 
 def room_avatar_filename(instance, filename):
     return f"Rooms/{slugify(instance.name)}/avatar/{filename}"
+
+class Room(models.Model):
+    name = models.CharField(_("name"), max_length=30, unique=True,)
+    avatar = models.ImageField(upload_to=room_avatar_filename)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_rooms')
+
+    participants = models.ManyToManyField(User, related_name='rooms_participated_in')
+
+    def __str__(self):
+        return self.name
+    
+class Post(models.Model):
+    content = models.TextField()
+    image = models.ImageField(upload_to=post_image_filename, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator')
+    slug= models.SlugField(default='',null=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(" ".join(self.content.split(" ")[:6]))
+        super(Post, self).save(*args, **kwargs)
+
+    def __str__(self):
+         return " ".join(self.content.split(" ")[:3])
+    

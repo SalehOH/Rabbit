@@ -44,3 +44,26 @@ class Post(models.Model):
     def __str__(self):
          return " ".join(self.content.split(" ")[:3])
     
+class Reply(models.Model):
+    content = models.TextField(max_length=300, null=False, blank=False)
+    image = models.ImageField(upload_to=reply_image_upload_path, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='replies')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='replies')
+    slug= models.SlugField(default='',null=True)
+
+
+    class Meta:
+        verbose_name_plural = 'replies'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(" ".join(self.content.split(" ")[:6]))
+        super(Reply, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return " ".join(self.content.split(" ")[:2])
+    
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')

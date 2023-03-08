@@ -11,6 +11,13 @@
 <div class="grid-container">
   <div class="grid-item">
     <div>rooms</div>
+    {% if rooms %}
+        <ul>
+            {% for room in rooms %}
+                <li><a href="{% url 'room' room_name=room.name%}">{{room.name}}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
   </div>
   <div class="grid-item">
     {% if posts %}

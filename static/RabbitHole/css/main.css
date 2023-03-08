@@ -22,8 +22,10 @@ img{
     border-radius: 50%;
 }
 a{
-   border: 2px rgb(12, 11, 11);
+   border: 2px solid rgb(12, 11, 11);
    background-color: #afb2b4b2;
    justify-content: center;
    margin-bottom: 20px;
+   width: 40px;
+   height: 35px;
 }

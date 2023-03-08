@@ -49,3 +49,18 @@ def create_room(request):
         form = RoomForm()
 
     return render(request, 'RabbitHole/create.html', {'form': form,})
+
+@login_required
+def join_room(request, room_name, user_id):
+    room = get_object_or_404(Room, name=room_name)
+    user = get_object_or_404(User, id=user_id)
+    if room:
+        if room.creator.id == user_id or user in room.participants.all():
+            return redirect('room', room_name=room_name)
+        
+        else:
+            room.participants.add(user)
+            messages.success(request, f"You have joined '{room_name}'!")
+            return redirect('room', room_name=room_name)
+    else:
+        redirect('home')

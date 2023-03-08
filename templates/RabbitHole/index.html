@@ -3,13 +3,14 @@
 {% endblock css %}
 
 {% block content %}
-<div class="container">
-    <h1>Rabbit</h1>
-    <a href="{% url 'create_room'%}"> Create new Rabbit Hole</a>
+<h1>Rabbit</h1>
+<div class="button button--link">
+    <a href="{% url 'create_room'%}" style = "float: right;"> Create new Rabbit Hole</a><br>
 </div>
 
 <div class="grid-container">
-  <div class="grid-item">
+  <!-- <div class="grid-item"> -->
+  <div class ="rooms_list">
     <div>rooms</div>
     {% if rooms %}
         <ul>
@@ -34,7 +35,7 @@
     {% endif %}
 
   </div>
-  <div class="grid-item">
+  <div class="user-account-box">
     {% if request.user.is_authenticated %}
     <img src="{{request.user.avatar.url}}" alt="{{request.user.username}}">
         <hr>

@@ -22,7 +22,12 @@
   <div class="grid-item">
     {% if posts %}
         {% for post in posts %}
-            <div>{{post.contnet}} <hr></div>
+            <div>{{post.content}}</div>
+            {% if post.image %}
+                <br/>
+                <img src="{{post.image.url}}" alt="{{post.room.name}}">
+            {% endif %}
+            <hr>
         {% endfor %}
     {% else %}
         <div>Posts go here</div>

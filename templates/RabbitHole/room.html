@@ -5,8 +5,14 @@
 {% block content %}
 <div class="container">
     <h1>{{room.name}}</h1>
-    {% if request.user not in room.participants.all %}
-        <a href="{% url 'join_room' room_name=room.name user_id=request.user.id%}"> Join</a>
+    {% if request.user.is_authenticated %}
+    <div class="container">
+        {% if request.user not in room.participants.all %}
+            <a href="{% url 'join_room' room_name=room.name user_id=request.user.id%}"> Join</a>
+        {% else %}
+            <a href="{% url 'create_post' room_name=room.name%}"> Create a Post</a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 

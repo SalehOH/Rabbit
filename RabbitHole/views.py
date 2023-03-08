@@ -5,7 +5,7 @@ from django.contrib import messages
 
 
 from .models import Room, Post
-from .forms import RoomForm
+from .forms import RoomForm, PostForm
 
 User = get_user_model()
 
@@ -48,7 +48,9 @@ def create_room(request):
     else:
         form = RoomForm()
 
-    return render(request, 'RabbitHole/create.html', {'form': form,})
+    return render(request, 'RabbitHole/create.html', {'form': form, 'name':'Room',})
+
+
 
 @login_required
 def join_room(request, room_name, user_id):
@@ -64,3 +66,27 @@ def join_room(request, room_name, user_id):
             return redirect('room', room_name=room_name)
     else:
         redirect('home')
+
+
+
+def post(request, room_name, post_id, post_slug):
+    post = get_object_or_404(Post, id=post_id, room__name=room_name, slug=post_slug)
+    replies = post.replies.all().order_by('-created_at')
+    context = {'post': post, 'replies': replies}
+    return render(request, 'RabbitHole/post.html', context)
+
+@login_required
+def create_post(request, room_name):
+    room = get_object_or_404(Room, name=room_name)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.room = room
+            post.user = request.user
+            post.save()
+            messages.success(request, 'Post created successfully!')
+            return redirect('post', room_name=room_name, post_id=post.id, post_slug=post.slug)
+    else:
+        form = PostForm()
+    return render(request, 'RabbitHole/create.html', {'form': form, 'room': room, 'name':'Post',})

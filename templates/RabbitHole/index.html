@@ -1,0 +1,33 @@
+{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
+<link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
+{% endblock css %}
+
+{% block content %}
+<div class="container">
+    <h1>Rabbit</h1>
+</div>
+
+
+<div class="grid-container">
+  <div class="grid-item">
+    <div>rooms</div>
+  </div>
+  <div class="grid-item">
+    {% if posts %}
+        {% for post in posts %}
+            <div>{{post.contnet}} <hr></div>
+        {% endfor %}
+    {% else %}
+        <div>Posts go here</div>
+    {% endif %}
+
+  </div>
+  <div class="grid-item">
+    {% if request.user.is_authenticated %}
+        {{request.user.username}}
+    {% else %}
+        <div> user_name </div>
+    {% endif %}
+  </div>  
+</div>
+{% endblock content %}

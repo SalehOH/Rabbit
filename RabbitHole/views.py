@@ -5,7 +5,7 @@ from django.contrib import messages
 
 
 from .models import Room, Post
-from .forms import RoomForm, PostForm
+from .forms import RoomForm, PostForm, ReplyForm
 
 User = get_user_model()
 
@@ -75,6 +75,8 @@ def post(request, room_name, post_id, post_slug):
     context = {'post': post, 'replies': replies}
     return render(request, 'RabbitHole/post.html', context)
 
+
+
 @login_required
 def create_post(request, room_name):
     room = get_object_or_404(Room, name=room_name)
@@ -90,3 +92,20 @@ def create_post(request, room_name):
     else:
         form = PostForm()
     return render(request, 'RabbitHole/create.html', {'form': form, 'room': room, 'name':'Post',})
+
+
+@login_required
+def create_reply(request, room_name, post_id, post_slug):
+    post = get_object_or_404(Post, id=post_id, room__name=room_name, slug=post_slug)
+    if request.method == 'POST':
+        form = ReplyForm(request.POST, request.FILES)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.post = post
+            reply.user = request.user
+            reply.save()
+            messages.success(request, 'Reply created successfully!')
+            return redirect('post', room_name=room_name, post_id=post.id,  post_slug=post.slug)
+    else:
+        form = ReplyForm()
+    return render(request, 'RabbitHole/create.html', {'form': form, 'post': post, 'name':'Reply',})

@@ -15,6 +15,20 @@
         <hr>
         <img src="{{post.image.url}}" alt="{{post.room.name}}">
     {% endif %}
+    {% if request.user in post.room.participants.all %}
+      <div><button onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"> Reply </button></div>
+    {% endif %}
+    {% if replies %} {% for reply in replies %}
+    <div> 
+      <span><img src="{{reply.user.avatar.url}}" alt=""></span> <span> - {{reply.user.username}}</span>
+      <p>
+        {{reply.content}}
+      </p>
+    </div>
+      <hr>
+    {% endfor %}
+    {% endif %}
+    <hr>
   </div>
   <div class="grid-item">
     <img src="{{post.room.avatar.url}}" alt="{{post.room.name}}">

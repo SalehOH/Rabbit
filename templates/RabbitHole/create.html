@@ -6,6 +6,8 @@
     <form method="post" enctype="multipart/form-data" action="{% url 'create_room'%}">
 {% elif name == 'Post' %}
     <form method="post" enctype="multipart/form-data" action="{% url 'create_post' room_name=room.name %}">
+{% else %}
+    <form method="post" enctype="multipart/form-data" action="{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug%}">
 {% endif %}
         {% csrf_token %}
         {{ form.as_p }}

@@ -8,3 +8,4 @@ db.sqlite3
 .cache
 .anaconda
 .env
+*_initial.py

@@ -13,5 +13,17 @@
 }
 .container{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+}
+
+img{
+    height: 160px;
+    width: auto;
+    border-radius: 50%;
+}
+a{
+   border: 2px rgb(12, 11, 11);
+   background-color: #afb2b4b2;
+   justify-content: center;
+   margin-bottom: 20px;
 }

@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.contrib import messages
+
+
 from .models import Room, Post
+from .forms import RoomForm
 
 User = get_user_model()
 
@@ -14,3 +19,33 @@ def index(request):
         pass
 
     return render(request, 'RabbitHole/index.html', context)
+
+def room(request, room_name):
+    room = get_object_or_404(Room, name=room_name)
+    context = {'room': room,}
+    try:
+        posts = Post.objects.filter(room=room)
+        context['posts'] = posts
+    except:
+        pass
+    
+    return render(request, 'RabbitHole/room.html', context)
+
+
+
+
+@login_required
+def create_room(request):
+    if request.method == 'POST':
+        form = RoomForm(request.POST, request.FILES)
+        if form.is_valid():
+            room = form.save(commit=False)
+            room.creator = request.user
+            room.save()
+            room.participants.add(request.user)
+            messages.success(request, 'Room created successfully!')
+            return redirect('room', room_name=room.name)
+    else:
+        form = RoomForm()
+
+    return render(request, 'RabbitHole/create.html', {'form': form,})

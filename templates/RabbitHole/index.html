@@ -5,8 +5,8 @@
 {% block content %}
 <div class="container">
     <h1>Rabbit</h1>
+    <a href="{% url 'create_room'%}"> Create new Rabbit Hole</a>
 </div>
-
 
 <div class="grid-container">
   <div class="grid-item">
@@ -24,6 +24,8 @@
   </div>
   <div class="grid-item">
     {% if request.user.is_authenticated %}
+    <img src="{{request.user.avatar.url}}" alt="{{request.user.username}}">
+        <hr>
         {{request.user.username}}
     {% else %}
         <div> user_name </div>

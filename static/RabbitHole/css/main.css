@@ -24,9 +24,15 @@ html {
     font-weight: 400;
 }
 
-/* headers */
+/* HEADER */
 .header {
     background-color: var(--maintheme-colour-darker);
+    padding: 2rem;
+}
+
+.header > .container {
+    display: flex;
+    gap: 10rem;
 }
 
 body {
@@ -39,7 +45,9 @@ img {
 }
 
 a { /* links */
-    color: var(--maintheme-colour)
+    display: inline-block;
+    color: var(--maintheme-colour);
+    text-decoration: none;
 }
 
 .grid-container {
@@ -74,4 +82,60 @@ a{
     overflow: hidden;
     position: relative;
     max-height: 80vh;
+}
+
+/* BUTTONS */
+.button {
+    background-color: var(--maintheme-colour);
+    color: var(--maintheme-colour-lighter);
+    gap: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    text-align: center;
+    align-items: center;
+    margin: 4px 2px;
+    border: 0;
+    padding: 1rem 2rem;
+}
+
+.button--link {
+    padding: 0;
+    color: var(--maintheme-colour-lighter);
+    box-shadow: none;
+}
+
+/* ROOMS */
+.rooms_list {
+    list-style: none;
+}
+
+.rooms_list li a {
+    display: flex;
+    color: var(--black-colour);
+    margin-bottom: 2.5rem;
+    justify-content: space-between;
+    transition: all 0.3s;
+}
+
+.rooms_list li a.active,
+.rooms_list li a:hover {
+  color: var(--maintheme-colour);
+}
+
+.rooms_list li a span {
+    padding: 0.5rem 0.5rem;
+    background-color: var(--maintheme-colour-darker);
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+/* USER accoutn boc */
+.user-account-box {
+    margin-left: 4rem;
+    background-color: var(--maintheme-colour);
+    overflow: hidden;
+    margin: 1.5rem;
+    padding: 1.5rem;
+    border: 2px solid var(--color-dark-medium);
+   
 }

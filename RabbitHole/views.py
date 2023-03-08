@@ -72,9 +72,9 @@ def join_room(request, room_name, user_id):
 def post(request, room_name, post_id, post_slug):
     post = get_object_or_404(Post, id=post_id, room__name=room_name, slug=post_slug)
     replies = post.replies.all().order_by('-created_at')
+
     context = {'post': post, 'replies': replies}
     return render(request, 'RabbitHole/post.html', context)
-
 
 
 @login_required
@@ -109,3 +109,12 @@ def create_reply(request, room_name, post_id, post_slug):
     else:
         form = ReplyForm()
     return render(request, 'RabbitHole/create.html', {'form': form, 'post': post, 'name':'Reply',})
+
+
+def user(request, username):
+    user = get_object_or_404(User, username=username)
+
+    posts = Post.objects.filter(user=user)
+
+    context = {'user': user,'posts': posts,}
+    return render(request, 'RabbitHole/user.html', context)

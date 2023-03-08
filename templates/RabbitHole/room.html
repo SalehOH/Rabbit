@@ -22,7 +22,7 @@
     <ul>
     {% for participant in room.participants.all %}
         <li>
-            {{participant.username}}
+            <a href="{% url 'user_page' username=participant.username %}">{{participant.username}}</a>
         </li>
     {% endfor %}
     </ul>

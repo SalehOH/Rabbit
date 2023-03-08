@@ -1,0 +1,31 @@
+{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
+<link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
+{% endblock css %} {% block content %}
+<div class="container">
+  <h1>{{user.username}}</h1>
+</div>
+
+<div class="grid-container">
+  <div class="grid-item">
+    <img src="{{user.avatar.url}}" alt="{{user.username}}" />
+    <hr />
+    {{user.username}}
+  </div>
+  <div class="grid-item">
+    {% if posts %}
+        {% for post in posts %}
+            <div>{{post.content}}</div>
+            {% if post.image %}
+                <br/>
+                <img src="{{post.image.url}}" alt="{{post.room.name}}">
+            {% endif %}
+            <hr>
+            <br/>
+            <br/>
+        {% endfor %}
+    {% else %}
+        <div>{{user.username}} doesn't have any posts :[ </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}

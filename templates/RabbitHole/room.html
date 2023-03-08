@@ -1,0 +1,40 @@
+{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
+<link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
+{% endblock css %}
+
+{% block content %}
+<div class="container">
+    <h1>{{room.name}}</h1>
+    {% if request.user not in room.participants.all %}
+        <a href="{% url 'join_room' room_name=room.name user_id=request.user.id%}"> Join</a>
+    {% endif %}
+</div>
+
+<div class="grid-container">
+  <div class="grid-item">
+    <div>members</div>
+    <ul>
+    {% for participant in room.participants.all %}
+        <li>
+            {{participant.username}}
+        </li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="grid-item">
+    {% if posts %}
+        {% for post in posts %}
+            <div>{{post.contnet}} <hr></div>
+        {% endfor %}
+    {% else %}
+        <div>Posts go here</div>
+    {% endif %}
+
+  </div>
+  <div class="grid-item">
+    <img src="{{room.avatar.url}}" alt="{{room.name}}">
+    <hr>
+    {{room.name}}
+  </div>  
+</div>
+{% endblock content %}

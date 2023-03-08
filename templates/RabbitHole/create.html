@@ -1,0 +1,17 @@
+{% extends 'RabbitHole/base.html' %} {% block content %}
+<div class="container">
+  <h1>Create room</h1>
+</div>
+<form
+  method="post"
+  enctype="multipart/form-data"
+  action="{% url 'create_room'%}"
+>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div>
+    <button type="submit">submit</button>
+  </div>
+</form>
+
+{% endblock content %}

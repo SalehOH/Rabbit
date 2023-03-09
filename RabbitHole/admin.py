@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Room, Post, Reply
 
-# Register your models here.
+
+admin.site.register(Room)
+admin.site.register(Post)
+admin.site.register(Reply)

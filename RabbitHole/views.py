@@ -96,10 +96,9 @@ def create_post(request, room_name):
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post,id=post_id)
-    room_name = post.room.name
     if request.user == post.user :
         post.delete()
-        response = redirect('room',room_name=room_name)
+        response = redirect('room',room_name=post.room.name)
     else:
         response = redirect('home')
     return response

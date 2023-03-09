@@ -1,49 +1,65 @@
-{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
+{% extends 'RabbitHole/base.html' %}
+
+{% load static %}
+
+{% block css %}
 <!-- <link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" /> -->
 <!-- <link rel=”stylesheet” href=”https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css”rel=”nofollow” integrity=”sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I” crossorigin=”anonymous”> -->
 {% endblock css %}
 
 {% block content %}
-<h4 class = "display-4">Rabbit</h4>
-<div class="button button--link">
-    <a href="{% url 'create_room'%}" style = "float: right;"> Create new Rabbit Hole</a><br>
-</div>
+<h4 class="display-4 mr-5">Rabbit</h4>
+<a href="{% url 'create_room'%}" class = "button btn-primary float-right rounded-sm mr-5">Create new Rabbit Hole</a><br>
 
-<div class="grid-container">
-  <!-- <div class="grid-item"> -->
-  <div class ="rooms_list">
-    <div>rooms</div>
-    {% if rooms %}
-        <ul>
-            {% for room in rooms %}
-                <li><a href="{% url 'room' room_name=room.name%}">{{room.name}}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-  </div>
-  <div class="grid-item">
-    {% if posts %}
-        {% for post in posts %}
-            <div><a href="#">{{post.user.username}}</a><hr><p class = "bg-primary">{{post.content}}</p></div>
-            {% if post.image %}
-                <br/>
-                <img src="{{post.image.url}}" alt="{{post.room.name}}">
+
+<br>
+<div class="container">
+    <div class="row">
+        <!-- rooms list navbar -->
+        <div class="col-2">
+            <div>rooms</div>
+            {% if rooms %}
+                <ul>
+                    {% for room in rooms %}
+                        <li><a href="{% url 'room' room_name=room.name%}">{{room.name}}</a></li>
+                    {% endfor %}
+                </ul>
             {% endif %}
-            <hr>
-        {% endfor %}
-    {% else %}
-        <div>Posts go here</div>
-    {% endif %}
+        </div>
+        <!-- rooms list navbar end -->
 
-  </div>
-  <div class="user-account-box">
-    {% if request.user.is_authenticated %}
-    <img src="{{request.user.avatar.url}}" alt="{{request.user.username}}">
-        <hr>
-        {{request.user.username}}
-    {% else %}
-        <div> user_name </div>
-    {% endif %}
-  </div>  
+        <!-- posts by users -->
+        <div class="col-6">
+            {% if posts %}
+                {% for post in posts %}
+                    <a href="#">{{post.user.username}}</a>
+                    <hr>
+                    <p class="bg-primary">{{post.content}}</p>
+                    {% if post.image %}
+                        <br/>
+                        <img src="{{post.image.url}}" alt="{{post.room.name}}">
+                    {% endif %}
+                    <button class="btn btn-primary">Upvote</button>
+                    <button class="btn btn-info">Reply</button>
+                    <hr>
+                {% endfor %}
+            {% else %}
+                <div>Posts go here</div>
+            {% endif %}
+        </div>
+        <!-- end of posts -->
+
+        <!-- user account box -->
+        <div class="col-4">
+            {% if request.user.is_authenticated %}
+                <img src="{{request.user.avatar.url}}" style="width: 25%" alt="{{request.user.username}}">
+                {{request.user.username}}
+            {% else %}
+                <div>user_name</div>
+            {% endif %}<hr>
+            <button class="btn btn-primary">Edit rabbit profile</button>
+        </div>
+        <!-- end of user account box -->
+    </div>
 </div>
 {% endblock content %}

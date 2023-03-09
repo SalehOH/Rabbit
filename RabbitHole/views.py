@@ -99,6 +99,7 @@ def delete_post(request, post_id):
     if request.user == post.user :
         post.delete()
         response = redirect('room',room_name=post.room.name)
+        messages.success(request, 'Post deleted successfully!')
     else:
         response = redirect('home')
     return response
@@ -127,6 +128,7 @@ def delete_reply(request, reply_id):
          post = reply.post
          if reply.user == request.user :
              reply.delete()
+             messages.success(request, 'Reply deleted successfully!')
          response = redirect('post',room_name = post.room.name, post_id = post.id, post_slug = post.slug)
      else:
          response = redirect('home')

@@ -1,9 +1,10 @@
 {% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
-<link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
+<!-- <link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" /> -->
+<!-- <link rel=”stylesheet” href=”https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css”rel=”nofollow” integrity=”sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I” crossorigin=”anonymous”> -->
 {% endblock css %}
 
 {% block content %}
-<h1>Rabbit</h1>
+<h4 class = "display-4">Rabbit</h4>
 <div class="button button--link">
     <a href="{% url 'create_room'%}" style = "float: right;"> Create new Rabbit Hole</a><br>
 </div>
@@ -23,7 +24,7 @@
   <div class="grid-item">
     {% if posts %}
         {% for post in posts %}
-            <div><a href="#">{{post.user.username}}</a>{{post.content}}</div>
+            <div><a href="#">{{post.user.username}}</a><hr><p class = "bg-primary">{{post.content}}</p></div>
             {% if post.image %}
                 <br/>
                 <img src="{{post.image.url}}" alt="{{post.room.name}}">

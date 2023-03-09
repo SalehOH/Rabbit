@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 
 
-from .models import Room, Post
+from .models import Room, Post,Reply
 from .forms import RoomForm, PostForm, ReplyForm
 
 User = get_user_model()
@@ -93,6 +93,17 @@ def create_post(request, room_name):
         form = PostForm()
     return render(request, 'RabbitHole/create.html', {'form': form, 'room': room, 'name':'Post',})
 
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post,id=post_id)
+    room_name = post.room.name
+    if request.user == post.user :
+        post.delete()
+        response = redirect('room',room_name=room_name)
+    else:
+        response = redirect('home')
+    return response
+
 
 @login_required
 def create_reply(request, room_name, post_id, post_slug):
@@ -110,6 +121,17 @@ def create_reply(request, room_name, post_id, post_slug):
         form = ReplyForm()
     return render(request, 'RabbitHole/create.html', {'form': form, 'post': post, 'name':'Reply',})
 
+@login_required
+def delete_reply(request, reply_id):
+     reply = get_object_or_404(Reply,id = reply_id)
+     if reply :
+         post = reply.post
+         if reply.user == request.user :
+             reply.delete()
+         response = redirect('post',room_name = post.room.name, post_id = post.id, post_slug = post.slug)
+     else:
+         response = redirect('home')
+     return response
 
 def user(request, username):
     user = get_object_or_404(User, username=username)

@@ -10,4 +10,6 @@ urlpatterns = [
     path('<room_name>/create-post/', views.create_post, name='create_post'),
     path('<room_name>/<post_id>/<post_slug>/', views.post, name='post'),
     path('<room_name>/<post_id>/<post_slug>/create-reply/', views.create_reply, name='create_reply'),
+    path('<room_name>/delete_post/<post_id>/', views.delete_post, name='delete_post'),
+    path('<room_name>/<post_id>/<post_slug>/delete_reply/<reply_id>/', views.delete_reply, name='delete_reply'),
 ]

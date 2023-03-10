@@ -38,15 +38,16 @@
         <div class="col-6">
             {% if posts %}
                 {% for post in posts %}
-                    <a href="#">{{post.user.username}}</a>
+                    <a href="#"><img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a>
                     <hr>
-                    <p class="bg-primary">{{post.content}}</p>
+                    <p class="border border-info">{{post.content}}</p>
                     {% if post.image %}
                         <br/>
                         <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">
                     {% endif %}
                     <button class="btn btn-primary">Upvote</button>
                     <button class="btn btn-info">Reply</button>
+                    <span class = "float-right text-secondary">{{post.created_at|timesince}} ago</span>
                     <hr>
                 {% endfor %}
             {% else %}

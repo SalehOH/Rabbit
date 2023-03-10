@@ -8,7 +8,7 @@
     {% if request.user.is_authenticated %}
     <div class="container">
         {% if request.user not in room.participants.all %}
-            <a href="{% url 'join_room' room_name=room.name user_id=request.user.id%}"> Join</a>
+            <a id="join" data-roomName="{{room.name}}" data-userId="{{request.user.id}}" href="#"> Join</a>
         {% else %}
             <a href="{% url 'create_post' room_name=room.name%}"> Create a Post</a>
         {% endif %}
@@ -19,7 +19,7 @@
 <div class="grid-container">
   <div class="grid-item">
     <div>members</div>
-    <ul>
+    <ul id="members" data-curuser="{{request.user.username}}">
     {% for participant in room.participants.all %}
         <li>
             <a href="{% url 'user_page' username=participant.username %}">{{participant.username}}</a>
@@ -45,4 +45,6 @@
     {{room.name}}
   </div>  
 </div>
+
+<script  src="{% static 'RabbitHole/js/room.js'%}"></script>
 {% endblock content %}

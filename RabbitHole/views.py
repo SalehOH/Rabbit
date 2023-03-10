@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import logout
-
+from django.db.models import Q
 
 from .models import Room, Post,Reply, Like
 from .forms import RoomForm, PostForm, ReplyForm
@@ -12,13 +12,17 @@ from .forms import RoomForm, PostForm, ReplyForm
 User = get_user_model()
 
 def index(request):
-    context = {}
-    try:
+    rooms = Room.objects.all().order_by('participants')
+    
+    if not request.user.is_anonymous:
+        posts = Post.objects.filter(room__in=Room.objects.filter(
+            Q(participants__id=request.user.id) | 
+            Q(creator=request.user))
+        )
+    else:
         posts = Post.objects.all().order_by('-created_at')
-        rooms = Room.objects.all()
-        context = {'posts': posts, 'rooms': rooms}
-    except:
-        pass
+    
+    context = {'posts': posts, 'rooms': rooms}
 
     return render(request, 'RabbitHole/index.html', context)
 

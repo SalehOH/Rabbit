@@ -36,6 +36,7 @@ class Post(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator')
     slug= models.SlugField(default='',null=True)
+    countlikes = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(" ".join(self.content.split(" ")[:6]))
@@ -50,7 +51,8 @@ class Reply(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='replies')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='replies')
-    slug= models.SlugField(default='',null=True)
+    slug = models.SlugField(default='',null=True)
+    countlikes = models.IntegerField(default=0)
 
 
     class Meta:
@@ -66,4 +68,10 @@ class Reply(models.Model):
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes', null=True)
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE, related_name='likes', null=True)
+
+
+    class Meta:
+        unique_together = ('user', 'post')
+        unique_together = ('user', 'reply')

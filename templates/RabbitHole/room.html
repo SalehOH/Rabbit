@@ -38,7 +38,9 @@
 
   </div>
   <div class="grid-item">
+    {% if room.avatar %}
     <img src="{{room.avatar.url}}" alt="{{room.name}}">
+    {% endif %}
     <hr>
     {{room.name}}
   </div>  

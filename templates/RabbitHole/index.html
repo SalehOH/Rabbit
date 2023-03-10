@@ -1,49 +1,77 @@
-{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
-<!-- <link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" /> -->
-<!-- <link rel=”stylesheet” href=”https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css”rel=”nofollow” integrity=”sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I” crossorigin=”anonymous”> -->
+{% extends 'RabbitHole/base.html' %}
+
+{% load static %}
+
+{% block css %}
 {% endblock css %}
 
 {% block content %}
-<h4 class = "display-4">Rabbit</h4>
-<div class="button button--link">
-    <a href="{% url 'create_room'%}" style = "float: right;"> Create new Rabbit Hole</a><br>
+<div class="container">
+<div class="row">
+    <div class = "col">
+        <h4 class="display-4 mr-5"><img src="{% static '\images\logo.jpg' %}" class = "img-fluid" style="width: 10%" alt="{{post.room.name}}">    Rabbit</h4> 
+    </div>
+    <div class = "col">
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'create_room'%}" class = "button btn-primary float-right rounded-sm mr-5">Create new Rabbit Hole</a><br>
+        {% endif %}
+    </div>
 </div>
 
-<div class="grid-container">
-  <!-- <div class="grid-item"> -->
-  <div class ="rooms_list">
-    <div>rooms</div>
-    {% if rooms %}
-        <ul>
-            {% for room in rooms %}
-                <li><a href="{% url 'room' room_name=room.name%}">{{room.name}}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-  </div>
-  <div class="grid-item">
-    {% if posts %}
-        {% for post in posts %}
-            <div><a href="#">{{post.user.username}}</a><hr><p class = "bg-primary">{{post.content}}</p></div>
-            {% if post.image %}
-                <br/>
-                <img src="{{post.image.url}}" alt="{{post.room.name}}">
-            {% endif %}
-            <hr>
-        {% endfor %}
-    {% else %}
-        <div>Posts go here</div>
-    {% endif %}
 
-  </div>
-  <div class="user-account-box">
-    {% if request.user.is_authenticated %}
-    <img src="{{request.user.avatar.url}}" alt="{{request.user.username}}">
-        <hr>
-        {{request.user.username}}
-    {% else %}
-        <div> user_name </div>
-    {% endif %}
-  </div>  
+<br>
+    <div class="row">
+        <!-- rooms list navbar -->
+        <div class="col-2">
+            <div>Rooms</div>
+            {% if rooms %}
+                <ul class="list-unstyled">
+                    {% for room in rooms %}
+                        <li><a href="{% url 'room' room_name=room.name%}" class = "text-decoration-none">{{room.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <!-- rooms list navbar end -->
+
+        <!-- posts by users -->
+        <div class="col-6">
+            {% if posts %}
+                {% for post in posts %}
+                    <a href="#"><img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a>
+                    <hr>
+                    <p class="border border-info">{{post.content}}</p>
+                    {% if post.image %}
+                        <br/>
+                        <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">
+                    {% endif %}
+                    <button class="btn btn-primary">Upvote</button>
+                    <button class="btn btn-info">Reply</button>
+                    <span class = "float-right text-secondary">{{post.created_at|timesince}} ago</span>
+                    <hr>
+                {% endfor %}
+            {% else %}
+                <div>Posts go here</div>
+            {% endif %}
+        </div>
+        <!-- end of posts -->
+
+        <!-- user account box -->
+        <div class="col-4">
+            {% if request.user.is_authenticated %}
+                <img src="{{request.user.avatar.url}}" style="width: 25%" alt="{{request.user.username}}">
+                {{request.user.username}}
+            {% else %}
+                <div>user_name</div>
+            {% endif %}<hr>
+            {% if request.user.is_authenticated %}
+                <button class="btn btn-primary">Edit rabbit profile</button>
+                <button class="btn btn-info" onclick = "location.href = '{% url 'account_logout'%}'">Log out</button>
+            {% else %}
+                <button class="btn btn-primary">Create rabbit profile</button>
+            {% endif %}
+        </div>
+        <!-- end of user account box -->
+    </div>
 </div>
 {% endblock content %}

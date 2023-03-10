@@ -82,10 +82,11 @@ def post(request, room_name, post_id, post_slug):
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if post.likes.filter(user=request.user).exists():
-        return JsonResponse({'error': 'You have already liked this post.'}, status=400)
-
-    like = Like.objects.create(user=request.user, post=post)
-    post.countlikes += 1
+        post.likes.filter(user=request.user)[0].delete()
+        post.countlikes -=1
+    else:
+        like = Like.objects.create(user=request.user, post=post)
+        post.countlikes += 1
     post.save()
     data = {'likes': post.countlikes}
     return JsonResponse(data)

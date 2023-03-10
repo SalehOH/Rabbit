@@ -7,24 +7,7 @@
     <h1>{{post.room.name}} - post</h1>
 </div>
 
-<script>
-function increaseLikes(postId) {
-  var request = new XMLHttpRequest();
-  request.open('GET', '/like_post/' + postId + '/');
-  request.onload = function() {
-    if (request.status === 200) {
-      var data = JSON.parse(request.responseText);
-      document.getElementById('likes-' + postId).innerHTML = data.likes;
-    } else {
-      console.log('Error: ' + request.status);
-    }
-  };
-  request.send();
-}
-</script>
-
 <div class="grid-container">
-  <div class="grid-item"> empty</div>
   <div class="grid-item">
     <div> {{post.content}} </div>
     {% if post.image %}
@@ -49,9 +32,9 @@ function increaseLikes(postId) {
   <div class="grid-item">
     <img src="{{post.room.avatar.url}}" alt="{{post.room.name}}">
     <hr>
+    <script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
     <p>Likes: <span id="likes-{{ post.id }}">{{ post.countlikes }}</span></p>
     <button onclick="increaseLikes({{ post.id }})">Like</button>
-    {{post.room.name}}
   </div>  
 </div>
 {% endblock content %}

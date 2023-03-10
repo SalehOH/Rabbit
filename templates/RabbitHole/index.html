@@ -9,7 +9,7 @@
 <div class="container">
 <div class="row">
     <div class = "col">
-        <h4 class="display-4 mr-5"><img src="{% static '\images\logo.jpg' %}" class = "img-fluid" style="width: 10%" alt="{{post.room.name}}">    Rabbit</h4> 
+        <h4 class="display-4 mr-5"><img src="{% static 'RabbitHole\images\logo.jpg' %}" class = "img-fluid" style="width: 10%" alt="{{post.room.name}}">    Rabbit</h4> 
     </div>
     <div class = "col">
         {% if request.user.is_authenticated %}
@@ -46,7 +46,6 @@
                         <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">
                     {% endif %}
 
-                    <script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
                     <button class="btn btn-primary" onclick="increaseLikes({{ post.id }})">Like</button>
                     <span  class="btn btn-success disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
 
@@ -72,11 +71,12 @@
                 <button class="btn btn-primary">Edit rabbit profile</button>
                 <button class="btn btn-info" onclick = "location.href = '{% url 'account_logout'%}'">Log out</button>
             {% else %}
-                <button onclick="location.href = '/accounts/login/'" class="btn btn-primary">Sign-in</button>
-                <button onclick="location.href = '/accounts/signup/'" class="btn btn-primary">Sign-up</button>
+                <button onclick="location.href = '{% url 'account_login' %}'" class="btn btn-primary">Sign-in</button>
+                <button onclick="location.href = '{% url 'account_signup' %}'" class="btn btn-primary">Sign-up</button>
             {% endif %}
         </div>
         <!-- end of user account box -->
     </div>
 </div>
+<script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
 {% endblock content %}

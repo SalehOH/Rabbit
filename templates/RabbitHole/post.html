@@ -32,9 +32,9 @@
   <div class="grid-item">
     <img src="{{post.room.avatar.url}}" alt="{{post.room.name}}">
     <hr>
-    <script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
     <p>Likes: <span id="likes-{{ post.id }}">{{ post.countlikes }}</span></p>
     <button onclick="increaseLikes({{ post.id }})">Like</button>
   </div>  
 </div>
+<script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
 {% endblock content %}

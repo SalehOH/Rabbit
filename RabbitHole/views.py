@@ -16,9 +16,9 @@ def index(request):
     
     if not request.user.is_anonymous:
         posts = Post.objects.filter(room__in=Room.objects.filter(
-            Q(participants__id=request.user.id) | 
-            Q(creator=request.user))
-        )
+            Q(participants__id=request.user.id) |
+            Q(creator=request.user)
+        )).order_by('-created_at')
     else:
         posts = Post.objects.all().order_by('-created_at')
     

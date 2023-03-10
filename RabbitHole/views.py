@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.http import JsonResponse
+from django.contrib.auth import logout
 
 
-from .models import Room, Post
+from .models import Room, Post,Reply, Like
 from .forms import RoomForm, PostForm, ReplyForm
 
 User = get_user_model()
@@ -76,6 +78,22 @@ def post(request, room_name, post_id, post_slug):
     context = {'post': post, 'replies': replies}
     return render(request, 'RabbitHole/post.html', context)
 
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.likes.filter(user=request.user).exists():
+        return JsonResponse({'error': 'You have already liked this post.'}, status=400)
+
+    like = Like.objects.create(user=request.user, post=post)
+    post.countlikes += 1
+    post.save()
+    data = {'likes': post.countlikes}
+    return JsonResponse(data)
+
+def like_reply(request, reply_id):
+    post = get_object_or_404(Post, id=reply_id)
+    post.likes += 1
+    post.save()
 
 @login_required
 def create_post(request, room_name):
@@ -92,6 +110,17 @@ def create_post(request, room_name):
     else:
         form = PostForm()
     return render(request, 'RabbitHole/create.html', {'form': form, 'room': room, 'name':'Post',})
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post,id=post_id)
+    if request.user == post.user :
+        post.delete()
+        response = redirect('room',room_name=post.room.name)
+        messages.success(request, 'Post deleted successfully!')
+    else:
+        response = redirect('home')
+    return response
 
 
 @login_required
@@ -110,6 +139,18 @@ def create_reply(request, room_name, post_id, post_slug):
         form = ReplyForm()
     return render(request, 'RabbitHole/create.html', {'form': form, 'post': post, 'name':'Reply',})
 
+@login_required
+def delete_reply(request, reply_id):
+     reply = get_object_or_404(Reply,id = reply_id)
+     if reply :
+         post = reply.post
+         if reply.user == request.user :
+             reply.delete()
+             messages.success(request, 'Reply deleted successfully!')
+         response = redirect('post',room_name = post.room.name, post_id = post.id, post_slug = post.slug)
+     else:
+         response = redirect('home')
+     return response
 
 def user(request, username):
     user = get_object_or_404(User, username=username)
@@ -118,3 +159,8 @@ def user(request, username):
 
     context = {'user': user,'posts': posts,}
     return render(request, 'RabbitHole/user.html', context)
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('home')

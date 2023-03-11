@@ -1,5 +1,5 @@
 # Rabbit
-In order to run this web app:
+## In order to run this web app:
 
   ### Launch anaconda and navigate to the app directory
   ### From the anaconda command line, run the following commands:

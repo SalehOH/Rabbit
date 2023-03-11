@@ -5,9 +5,18 @@ import django
 django.setup()
 from RabbitHole.models import Room, Post, User, Reply
 
+import random
+import string
+import random
+
+def generateContent():
+    letters = string.ascii_lowercase
+    output = ""
+    for i in  range(int(random.random()*100)):
+        output += ''.join(random.choice(letters) for i in range(12)) + " "
+    return output
+
 def populate():
-    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consequat hendrerit consequat. Praesent tortor eros, convallis eu sollicitudin sodales, efficitur a augue. Etiam quis odio sed dui venenatis dictum eget ultrices justo. Aliquam eu neque feugiat, semper lectus vel, ornare arcu. Duis vitae lectus massa. Praesent pellentesque pellentesque sem, vitae sollicitudin sem pharetra non. Pellentesque id suscipit diam. Fusce nec eros sagittis, molestie velit id, tempor urna. Etiam quis ligula in ante faucibus ullamcorper. Nunc aliquet ex et porta mattis. Pellentesque pulvinar massa volutpat rutrum consectetur. Nunc consequat pellentesque ex, a faucibus nisi fringilla nec. Mauris sodales quam sed lectus facilisis, vitae egestas odio consectetur. Mauris elementum velit et cursus mollis. Quisque odio purus, fermentum ac ante eget, pharetra elementum mi."
-    reply_content = ["That's really funny =')", "Do you know Man Utd lost 7-0 to Liverpool? lol", "hahaha couldn't be more wrong"]
 
     users = [
         {"username":"reilyAdams", "email":"ReilyAdams@gmail.com", 'password':"admin"},
@@ -30,15 +39,15 @@ def populate():
     
     for room in rooms:
         room_created = add_room(room)
-        posts.append({"room": room_created, 'content': content, 'user': users[0]['username'], 'image' : None})
-        posts.append({"room": room_created, 'content': content, 'user': users[1]['username'], 'image' : None})
-        posts.append({"room": room_created, 'content': content, 'user': users[2]['username'], 'image' : None})
+        posts.append({"room": room_created, 'content': generateContent(), 'user': users[0]['username'], 'image' : None})
+        posts.append({"room": room_created, 'content': generateContent(), 'user': users[1]['username'], 'image' : None})
+        posts.append({"room": room_created, 'content': generateContent(), 'user': users[2]['username'], 'image' : None})
     
     for post in posts:
         post_created = add_post(post)
-        add_reply({'post':post_created, 'content': reply_content[0], 'user': users[0]['username']})
-        add_reply({'post':post_created, 'content': reply_content[2], 'user': users[2]['username']})
-        add_reply({'post':post_created, 'content': reply_content[1], 'user': users[1]['username']})
+        add_reply({'post':post_created, 'content': generateContent(), 'user': users[0]['username']})
+        add_reply({'post':post_created, 'content': generateContent(), 'user': users[2]['username']})
+        add_reply({'post':post_created, 'content': generateContent(), 'user': users[1]['username']})
 
 def add_user(info_dict):
     user = User.objects.create(username=info_dict['username'], email=info_dict['email'])
@@ -67,6 +76,7 @@ def add_reply(info_dict):
     reply.save()
 
 if __name__ == '__main__': 
+
     print("Starting .....")
     populate()
     print("Completed!")

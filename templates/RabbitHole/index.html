@@ -27,7 +27,7 @@
             {% if rooms %}
                 <ul class="list-unstyled">
                     {% for room in rooms %}
-                        <li><a href="{% url 'room' room_name=room.name%}" class = "text-decoration-none">{{room.name}}</a></li>
+                        <li><a href="{% url 'room' room_name=room.name %}" class = "text-decoration-none">{{room.name}}</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}
@@ -38,19 +38,25 @@
         <div class="col-6">
             {% if posts %}
                 {% for post in posts %}
-                    <a href="#"><img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a>
+                    <span ><a href="{% url 'user_page' username=post.user.username %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
+                    <span style="position:relative;left:55%;" ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
                     <hr>
-                    <p class="border border-info">{{post.content|slice:":360"}}</p>
+                    <p onclick="location.href = '{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.content|slice:":360"}}</p>
                     {% if post.image %}
                         <br/>
                         <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">
                     {% endif %}
 
-                    <button class="btn btn-primary" onclick="increaseLikes({{ post.id }})">Like</button>
-                    <span  class="btn btn-success disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
 
-                    <button class="btn btn-info">Reply</button>
-                    <span class = "float-right text-secondary">{{post.created_at|timesince}} ago</span>
+                    <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> Like </button>
+                    <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
+                    <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})">Dislike</button>
+
+
+                    <span class="float-right" >
+                        <span class = "text-secondary">{{post.created_at|timesince}} ago</span>
+                        <button class="btn btn-info">Reply</button>
+                    </span>
                     <hr>
                 {% endfor %}
             {% else %}

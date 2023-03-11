@@ -32,8 +32,9 @@
   <div class="grid-item">
     <img src="{{post.room.avatar.url}}" alt="{{post.room.name}}">
     <hr>
-    <p>Likes: <span id="likes-{{ post.id }}">{{ post.countlikes }}</span></p>
-    <button onclick="increaseLikes({{ post.id }})">Like</button>
+      <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> Like </button>
+      <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
+      <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})">Dislike</button>
   </div>  
 </div>
 <script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>

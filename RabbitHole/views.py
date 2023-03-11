@@ -24,6 +24,19 @@ def index(request):
     
     context = {'posts': posts, 'rooms': rooms}
 
+    if request.user.is_authenticated:
+        likes = Like.objects.filter(user=request.user)
+        for post in posts:
+            if likes.filter(post=post).exists():
+                if likes.get(post=post).isdislike:
+                    post.likestatus = False
+                if not likes.get(post=post).isdislike:
+                    post.likestatus = True
+            else:
+                post.likestatus = None
+
+
+
     return render(request, 'RabbitHole/index.html', context)
 
 def room(request, room_name):
@@ -80,25 +93,69 @@ def post(request, room_name, post_id, post_slug):
     replies = post.replies.all().order_by('-created_at')
 
     context = {'post': post, 'replies': replies}
+
+    likes = Like.objects.filter(user=request.user)
+    if likes.filter(post=post).exists():
+        if likes.get(post=post).isdislike:
+            post.likestatus = False
+        if not likes.get(post=post).isdislike:
+            post.likestatus = True
+    else:
+        post.likestatus = None
+
     return render(request, 'RabbitHole/post.html', context)
 
 @login_required
 def like_post(request, post_id):
+    data = {}
     post = get_object_or_404(Post, id=post_id)
-    if post.likes.filter(user=request.user).exists():
-        post.likes.filter(user=request.user)[0].delete()
-        post.countlikes -=1
-    else:
-        like = Like.objects.create(user=request.user, post=post)
+    try:
+        like = post.likes.get(user=request.user)
+        if like.isdislike:
+            post.countlikes += 2
+            like.isdislike = False
+            data["result"] = True
+            like.save()
+        else:
+            post.countlikes -= 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
         post.countlikes += 1
+        like = Like.objects.create(user=request.user, post=post)
+        data["result"] = True
     post.save()
-    data = {'likes': post.countlikes}
+
+    data["likes"] = post.countlikes
+
+
+
     return JsonResponse(data)
 
-def like_reply(request, reply_id):
-    post = get_object_or_404(Post, id=reply_id)
-    post.likes += 1
+@login_required
+def dislike_post(request, post_id):
+    data = {}
+    post = get_object_or_404(Post, id=post_id)
+    try:
+        like = post.likes.get(user=request.user)
+        if not like.isdislike:
+            post.countlikes -= 2
+            like.isdislike = True
+            data["result"] = False
+            like.save()
+        else:
+            post.countlikes += 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        post.countlikes -= 1
+        like = Like.objects.create(user=request.user, post=post, isdislike=True)
+        data["result"] = False
     post.save()
+
+    data["likes"] = post.countlikes
+
+    return JsonResponse(data)
 
 @login_required
 def create_post(request, room_name):

@@ -19,7 +19,7 @@
     {% endif %}
     {% if replies %} {% for reply in replies %}
     <div> 
-      <span><img src="{{reply.user.avatar.url}}" alt=""></span> <span> - {{reply.user.username}}</span>
+      <span><img src="{{reply.user.avatar.url}}" alt="{{reply.user.username}}" width="120" height="100"></span> <span> - {{reply.user.username}}</span>
       <p>
         {{reply.content}}
       </p>

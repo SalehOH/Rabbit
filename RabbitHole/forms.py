@@ -18,8 +18,8 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['content', 'image']
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control  textF', 'data-type': 'text'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control imageF', 'data-type': 'picture'}),
         }
 
 

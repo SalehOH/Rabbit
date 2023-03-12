@@ -30,7 +30,8 @@
   <div class="grid-item">
     {% if posts %}
         {% for post in posts %}
-            <div>{{post.contnet}} <hr></div>
+            <div>{{post.content}} <hr></div>
+            <a style=" border: 2px soild grey" href="{% url 'post' room.name post.id post.slug%}"> view post</a>
         {% endfor %}
     {% else %}
         <div>Posts go here</div>

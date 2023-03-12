@@ -11,27 +11,20 @@ if(joinButton){
         joinRoom(joinButton.dataset.roomname, joinButton.dataset.userid)
     })
 }
-function joinRoom(roomName, userId) {
 
-    fetch(`http://127.0.0.1:8000/${roomName}/${userId}/join/`, {
+async function joinRoom(roomName, userId) {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/${roomName}/${userId}/join/`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Error while joinig the room");
-      })
-      .then((data) => {
-        joinButton.remove();
-        members.insertAdjacentHTML("beforeend", userEle);
-      })
-      .catch((error) => {
-        joinButton.remove();
-        members.insertAdjacentHTML("beforeend", userEle);
-      });
+      headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+      joinButton.remove();
+      members.insertAdjacentHTML("beforeend", userEle);
+    } else {
+        throw new Error("Error while joining the room");
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
-

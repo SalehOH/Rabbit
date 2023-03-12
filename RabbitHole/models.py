@@ -30,7 +30,8 @@ class Room(models.Model):
         return self.name
     
 class Post(models.Model):
-    content = models.TextField()
+    title = models.TextField(max_length=100, null=False)
+    content = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to=post_image_filename, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room')
@@ -39,7 +40,7 @@ class Post(models.Model):
     countlikes = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(" ".join(self.content.split(" ")[:6]))
+        self.slug = slugify(" ".join(self.title.split(" ")[:3]))
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):

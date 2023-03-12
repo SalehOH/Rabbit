@@ -16,10 +16,11 @@ class RoomForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['content', 'image']
+        fields = ['title', 'content', 'image']
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control  textF', 'data-type': 'text'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control imageF', 'data-type': 'picture'}),
+            'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'content': forms.Textarea(attrs={'class': 'form-control textF', 'data-type': 'text'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file imageF', 'data-type': 'picture'}),
         }
 
 

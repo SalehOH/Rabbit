@@ -9,10 +9,10 @@ import random
 import string
 import random
 
-def generateContent():
+def generateContent(len):
     letters = string.ascii_lowercase
     output = ""
-    for i in  range(int(random.random()*100)):
+    for i in  range(int(random.random()*len) + 10):
         output += ''.join(random.choice(letters) for i in range(12)) + " "
     return output
 
@@ -39,15 +39,15 @@ def populate():
     
     for room in rooms:
         room_created = add_room(room)
-        posts.append({"room": room_created, 'content': generateContent(), 'user': users[0]['username'], 'image' : None})
-        posts.append({"room": room_created, 'content': generateContent(), 'user': users[1]['username'], 'image' : None})
-        posts.append({"room": room_created, 'content': generateContent(), 'user': users[2]['username'], 'image' : None})
+        posts.append({"room": room_created, 'title':generateContent(25),  'content': generateContent(100), 'user': users[0]['username'], 'image' : None})
+        posts.append({"room": room_created, 'title':generateContent(25),  'content': generateContent(100), 'user': users[1]['username'], 'image' : None})
+        posts.append({"room": room_created, 'title':generateContent(25),  'content': generateContent(100), 'user': users[2]['username'], 'image' : None})
     
     for post in posts:
         post_created = add_post(post)
-        add_reply({'post':post_created, 'content': generateContent(), 'user': users[0]['username']})
-        add_reply({'post':post_created, 'content': generateContent(), 'user': users[2]['username']})
-        add_reply({'post':post_created, 'content': generateContent(), 'user': users[1]['username']})
+        add_reply({'post':post_created, 'content': generateContent(100), 'user': users[0]['username']})
+        add_reply({'post':post_created, 'content': generateContent(100), 'user': users[2]['username']})
+        add_reply({'post':post_created, 'content': generateContent(100), 'user': users[1]['username']})
 
 def add_user(info_dict):
     user = User.objects.create(username=info_dict['username'], email=info_dict['email'])
@@ -66,7 +66,7 @@ def add_room(info_dict):
 
 def add_post(info_dict):
     user = User.objects.get(username=info_dict['user'])
-    post = Post.objects.create(room=info_dict['room'], user=user, content=info_dict['content'], image=info_dict['image'])
+    post = Post.objects.create(room=info_dict['room'], user=user, title=info_dict['title'], content=info_dict['content'], image=info_dict['image'])
     post.save()
     return post
 

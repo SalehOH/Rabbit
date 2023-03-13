@@ -45,9 +45,9 @@ def populate():
     
     for post in posts:
         post_created = add_post(post)
-        add_reply({'post':post_created, 'content': generateContent(100), 'user': users[0]['username']})
-        add_reply({'post':post_created, 'content': generateContent(100), 'user': users[2]['username']})
-        add_reply({'post':post_created, 'content': generateContent(100), 'user': users[1]['username']})
+        add_reply({'post':post_created, 'title':generateContent(25), 'content': generateContent(100), 'user': users[0]['username']})
+        add_reply({'post':post_created, 'title':generateContent(25), 'content': generateContent(100), 'user': users[2]['username']})
+        add_reply({'post':post_created, 'title':generateContent(25), 'content': generateContent(100), 'user': users[1]['username']})
 
 def add_user(info_dict):
     user = User.objects.create(username=info_dict['username'], email=info_dict['email'])
@@ -72,7 +72,7 @@ def add_post(info_dict):
 
 def add_reply(info_dict):
     user = User.objects.get(username=info_dict['user'])
-    reply = Reply.objects.create(post=info_dict['post'], user=user, content=info_dict['content'])
+    reply = Reply.objects.create(post=info_dict['post'], user=user, title=info_dict['title'], content=info_dict['content'])
     reply.save()
 
 if __name__ == '__main__': 

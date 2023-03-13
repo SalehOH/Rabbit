@@ -41,7 +41,7 @@
                     <span ><a href="{% url 'user_page' username=post.user.username %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
                     <span style="position:relative;left:55%;" ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
                     <hr>
-                    <p onclick="location.href = '{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.content|slice:":360"}}</p>
+                    <p onclick="location.href = '{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.title}}</p>
                     {% if post.image %}
                         <br/>
                         <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">

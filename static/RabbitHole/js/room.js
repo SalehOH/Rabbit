@@ -1,14 +1,24 @@
-const joinButton = document.getElementById("join")
+const joinBtn = document.getElementById("join")
 const members = document.getElementById("members")
-const userEle = `
-<li>
-    <a href="u/${members.dataset.curuser}">${members.dataset.curuser}</a>
-</li>`
+const nav = document.getElementById("nav")
 
-if(joinButton){
-    joinButton.addEventListener("click", ()=> {
+const userEle = 
+`
+<li>
+    <a href="/u/${members.dataset.curuser}">${members.dataset.curuser}</a>
+</li>
+`
+const createPostEle = 
+`       
+  <a href="/${joinBtn.dataset.roomname}/create-post/">Create a Post</a>
+        
+`
+if(joinBtn){
+  joinBtn.addEventListener("click", ()=> {
         console.log("clicked")
-        joinRoom(joinButton.dataset.roomname, joinButton.dataset.userid)
+        joinRoom(joinBtn.dataset.roomname, joinBtn.dataset.userid);
+        nav.insertAdjacentHTML("afterbegin", createPostEle);
+        console.log("hey")
     })
 }
 
@@ -19,7 +29,7 @@ async function joinRoom(roomName, userId) {
       headers: {"Content-Type": "application/json"},
     });
     if (response.ok) {
-      joinButton.remove();
+      joinBtn.remove();
       members.insertAdjacentHTML("beforeend", userEle);
     } else {
         throw new Error("Error while joining the room");

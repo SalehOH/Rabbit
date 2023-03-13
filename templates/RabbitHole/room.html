@@ -1,12 +1,13 @@
 {% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
 <link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
+<script defer src="{% static 'RabbitHole/js/room.js'%}"></script>
 {% endblock css %}
 
 {% block content %}
 <div class="container">
     <h1>{{room.name}}</h1>
     {% if request.user.is_authenticated %}
-    <div class="container">
+    <div id="nav" class="container">
         {% if request.user not in room.participants.all %}
             <a id="join" data-roomName="{{room.name}}" data-userId="{{request.user.id}}" href="#"> Join</a>
         {% else %}
@@ -46,6 +47,4 @@
     {{room.name}}
   </div>  
 </div>
-
-<script  src="{% static 'RabbitHole/js/room.js'%}"></script>
 {% endblock content %}

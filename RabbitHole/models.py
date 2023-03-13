@@ -47,6 +47,7 @@ class Post(models.Model):
          return " ".join(self.content.split(" ")[:3])
     
 class Reply(models.Model):
+    title = models.TextField(max_length=100, null=False)
     content = models.TextField(max_length=300, null=False, blank=False)
     image = models.ImageField(upload_to=reply_image_upload_path, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -3,8 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.http import JsonResponse
-from django.contrib.auth import logout
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from .models import Room, Post,Reply, Like
 from .forms import RoomForm, PostForm, ReplyForm
@@ -12,13 +11,15 @@ from .forms import RoomForm, PostForm, ReplyForm
 User = get_user_model()
 
 def index(request):
-    rooms = Room.objects.all().order_by('participants')
+    rooms = Room.objects.annotate(members=Count('participants')).order_by('-members')
     
     if not request.user.is_anonymous:
         posts = Post.objects.filter(room__in=Room.objects.filter(
             Q(participants__id=request.user.id) |
             Q(creator=request.user)
         )).order_by('-created_at')
+        if len(posts) < 2:
+            posts = Post.objects.all().order_by('-created_at')
     else:
         posts = Post.objects.all().order_by('-created_at')
     
@@ -221,8 +222,3 @@ def user(request, username):
 
     context = {'user': user,'posts': posts,}
     return render(request, 'RabbitHole/user.html', context)
-
-@login_required
-def logout_view(request):
-    logout(request)
-    return redirect('home')

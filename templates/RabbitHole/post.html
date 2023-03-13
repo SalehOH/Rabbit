@@ -9,11 +9,14 @@
 
 <div class="grid-container">
   <div class="grid-item">
-    <div> {{post.content}} </div>
+      <div> {{post.title}} </div>
     {% if post.image %}
         <hr>
         <img src="{{post.image.url}}" alt="{{post.room.name}}">
+    {% elif post.content %}
+      <div> {{post.title}} </div>
     {% endif %}
+
     {% if request.user in post.room.participants.all %}
       <div><button onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"> Reply </button></div>
     {% endif %}
@@ -21,8 +24,15 @@
     <div> 
       <span><img src="{{reply.user.avatar.url}}" alt="{{reply.user.username}}" width="120" height="100"></span> <span> - {{reply.user.username}}</span>
       <p>
-        {{reply.content}}
+        {{reply.title}}
       </p>
+      <div>
+        {% if reply.image %}
+          <img src="{{reply.image.url}}" alt="{{reply.user.username}}" width="120" height="100">
+        {% elif reply.content %}
+          {{reply.content}}
+        {% endif %}
+      </div>
     </div>
       <hr>
     {% endfor %}

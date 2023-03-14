@@ -51,9 +51,6 @@ class RoomViewTest(TestCase):
         self.assertTrue(Reply.objects.filter(content='test reply content').exists())
 
 
-
-
-
 class PostTestCase(TestCase):
 
     def setUp(self):
@@ -68,9 +65,6 @@ class PostTestCase(TestCase):
     def test_post_slug_creation(self):
         self.assertEqual(self.post.slug, 'test-post')
         self.assertEqual(Post.objects.get(pk=self.post.pk).slug, 'test-post')
-
-
-
 
 
 class ReplyTestCase(TestCase):

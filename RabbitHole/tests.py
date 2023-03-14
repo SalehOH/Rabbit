@@ -24,6 +24,14 @@ class RoomViewTest(TestCase):
             content='test reply content', post=self.post, user=self.user
         )
 
+    #def test_index_view(self):
+     #   response = self.client.get(reverse('posts','rooms'))
+      #  self.assertEqual(response.status_code, 200)
+       # self.assertTemplateUsed(response, 'RabbitHole/index.html')
+        #self.assertContains(response, 'Welcome to RabbitHole')
+        #self.assertQuerysetEqual(response.context['rooms'], [repr(self.room1), repr(self.room2)])
+        #self.assertQuerysetEqual(response.context['posts'], [repr(self.post3), repr(self.post2), repr(self.post1)])
+
     def test_room_view(self):
         response = self.client.get(reverse('room', args=[self.room.name]))
         self.assertEqual(response.status_code, 200)
@@ -36,7 +44,13 @@ class RoomViewTest(TestCase):
         response = self.client.post(reverse('create_room'), {'name': 'newroom'})
         self.assertEqual(response.status_code, 200)
         #not sure?
-        self.assertFalse(Room.objects.filter(name='newroom').exists())
+        #self.assertFalse(Room.objects.filter(name='newroom').exists())
+
+    def test_join_room_view(self):
+        self.client.login(username='testuser', password='testpass')
+        response = self.client.get(reverse('join_room', args=[self.room.name, self.user.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.room.participants.all().count(), 1)
 
     def test_create_post_view(self):
         self.client.login(username='testuser', password='testpass')

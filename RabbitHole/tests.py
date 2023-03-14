@@ -24,13 +24,11 @@ class RoomViewTest(TestCase):
             content='test reply content', post=self.post, user=self.user
         )
 
-    #def test_index_view(self):
-        #response = self.client.get(reverse('index', args=[self.index.name]))
-        #self.assertEqual(response.status_code, 200)
-        #self.assertTemplateUsed(response, 'RabbitHole/index.html')
-        #self.assertContains(response, 'Welcome to RabbitHole')
-        #self.assertQuerysetEqual(response.context['rooms'], [repr(self.room1), repr(self.room2)])
-        #self.assertQuerysetEqual(response.context['posts'], [repr(self.post3), repr(self.post2), repr(self.post1)])
+    def test_index_view(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'RabbitHole/index.html')
+
 
     def test_room_view(self):
         response = self.client.get(reverse('room', args=[self.room.name]))

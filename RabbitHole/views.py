@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import logout
-
+from django.db.models import Q
 
 from .models import Room, Post,Reply, Like
 from .forms import RoomForm, PostForm, ReplyForm
@@ -12,13 +12,30 @@ from .forms import RoomForm, PostForm, ReplyForm
 User = get_user_model()
 
 def index(request):
-    context = {}
-    try:
+    rooms = Room.objects.all().order_by('participants')
+    
+    if not request.user.is_anonymous:
+        posts = Post.objects.filter(room__in=Room.objects.filter(
+            Q(participants__id=request.user.id) |
+            Q(creator=request.user)
+        )).order_by('-created_at')
+    else:
         posts = Post.objects.all().order_by('-created_at')
-        rooms = Room.objects.all()
-        context = {'posts': posts, 'rooms': rooms}
-    except:
-        pass
+    
+    context = {'posts': posts, 'rooms': rooms}
+
+    if request.user.is_authenticated:
+        likes = Like.objects.filter(user=request.user)
+        for post in posts:
+            if likes.filter(post=post).exists():
+                if likes.get(post=post).isdislike:
+                    post.likestatus = False
+                if not likes.get(post=post).isdislike:
+                    post.likestatus = True
+            else:
+                post.likestatus = None
+
+
 
     return render(request, 'RabbitHole/index.html', context)
 
@@ -76,24 +93,69 @@ def post(request, room_name, post_id, post_slug):
     replies = post.replies.all().order_by('-created_at')
 
     context = {'post': post, 'replies': replies}
+
+    likes = Like.objects.filter(user=request.user)
+    if likes.filter(post=post).exists():
+        if likes.get(post=post).isdislike:
+            post.likestatus = False
+        if not likes.get(post=post).isdislike:
+            post.likestatus = True
+    else:
+        post.likestatus = None
+
     return render(request, 'RabbitHole/post.html', context)
 
 @login_required
 def like_post(request, post_id):
+    data = {}
     post = get_object_or_404(Post, id=post_id)
-    if post.likes.filter(user=request.user).exists():
-        return JsonResponse({'error': 'You have already liked this post.'}, status=400)
-
-    like = Like.objects.create(user=request.user, post=post)
-    post.countlikes += 1
+    try:
+        like = post.likes.get(user=request.user)
+        if like.isdislike:
+            post.countlikes += 2
+            like.isdislike = False
+            data["result"] = True
+            like.save()
+        else:
+            post.countlikes -= 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        post.countlikes += 1
+        like = Like.objects.create(user=request.user, post=post)
+        data["result"] = True
     post.save()
-    data = {'likes': post.countlikes}
+
+    data["likes"] = post.countlikes
+
+
+
     return JsonResponse(data)
 
-def like_reply(request, reply_id):
-    post = get_object_or_404(Post, id=reply_id)
-    post.likes += 1
+@login_required
+def dislike_post(request, post_id):
+    data = {}
+    post = get_object_or_404(Post, id=post_id)
+    try:
+        like = post.likes.get(user=request.user)
+        if not like.isdislike:
+            post.countlikes -= 2
+            like.isdislike = True
+            data["result"] = False
+            like.save()
+        else:
+            post.countlikes += 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        post.countlikes -= 1
+        like = Like.objects.create(user=request.user, post=post, isdislike=True)
+        data["result"] = False
     post.save()
+
+    data["likes"] = post.countlikes
+
+    return JsonResponse(data)
 
 @login_required
 def create_post(request, room_name):

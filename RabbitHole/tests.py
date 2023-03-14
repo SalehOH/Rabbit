@@ -78,7 +78,6 @@ class RoomViewTest(TestCase):
         self.assertEqual(response.json()['result'], False)
         self.assertEqual(response.json()['likes'], -1)
 
-
 class PostTestCase(TestCase):
 
     def setUp(self):
@@ -110,3 +109,20 @@ class ReplyTestCase(TestCase):
     def test_reply_slug_creation(self):
         self.assertEqual(self.reply.slug, 'test-reply')
         self.assertEqual(Reply.objects.get(pk=self.reply.pk).slug, 'test-reply')
+
+
+class RoomTestCase(TestCase):
+    @classmethod
+    def setUpTestData(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.room = Room.objects.create(name='testroom', avatar='room.jpg', creator=self.user)
+
+    def test_room_str(self):
+        room_str = str(self.room)
+        expected_str = 'testroom'
+        self.assertEqual(room_str, expected_str)
+        
+    def test_room_creator(self):
+        creator = self.room.creator
+        self.assertEqual(creator, self.user)
+        

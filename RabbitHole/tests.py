@@ -72,6 +72,14 @@ class RoomViewTest(TestCase):
         self.assertEqual(response.json()['likes'], 1)
 
 
+    def test_dislike_post_view(self):
+        self.client.login(username='testuser', password='testpass')
+        response = self.client.post(reverse('dislike_post', args=[self.post.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['result'], False)
+        self.assertEqual(response.json()['likes'], -1)
+
+
 class PostTestCase(TestCase):
 
     def setUp(self):

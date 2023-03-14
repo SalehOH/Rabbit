@@ -25,9 +25,9 @@ class RoomViewTest(TestCase):
         )
 
     #def test_index_view(self):
-     #   response = self.client.get(reverse('posts','rooms'))
-      #  self.assertEqual(response.status_code, 200)
-       # self.assertTemplateUsed(response, 'RabbitHole/index.html')
+        #response = self.client.get(reverse('index', args=[self.index.name]))
+        #self.assertEqual(response.status_code, 200)
+        #self.assertTemplateUsed(response, 'RabbitHole/index.html')
         #self.assertContains(response, 'Welcome to RabbitHole')
         #self.assertQuerysetEqual(response.context['rooms'], [repr(self.room1), repr(self.room2)])
         #self.assertQuerysetEqual(response.context['posts'], [repr(self.post3), repr(self.post2), repr(self.post1)])
@@ -41,10 +41,11 @@ class RoomViewTest(TestCase):
 
     def test_create_room_view(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('create_room'), {'name': 'newroom'})
+        response = self.client.post(reverse('create_room'), {'name': 'testroom'})
         self.assertEqual(response.status_code, 200)
-        #not sure?
-        #self.assertFalse(Room.objects.filter(name='newroom').exists())
+        self.assertTrue(Room.objects.filter(name='testroom').exists())
+
+
 
     def test_join_room_view(self):
         self.client.login(username='testuser', password='testpass')

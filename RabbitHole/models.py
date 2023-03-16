@@ -48,7 +48,7 @@ class Post(models.Model):
     
 class Reply(models.Model):
     title = models.TextField(max_length=100, null=False)
-    content = models.TextField(max_length=300, null=False, blank=False)
+    content = models.TextField(max_length=300, null=True, blank=True)
     image = models.ImageField(upload_to=reply_image_upload_path, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='replies')

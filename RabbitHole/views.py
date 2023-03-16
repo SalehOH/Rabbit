@@ -23,7 +23,7 @@ def index(request):
     else:
         posts = Post.objects.all().order_by('-created_at')
     
-    context = {'posts': posts, 'rooms': rooms}
+    context = {'posts': posts, 'rooms': rooms, 'page': 'home'}
 
     if request.user.is_authenticated:
         likes = Like.objects.filter(user=request.user)
@@ -42,7 +42,7 @@ def index(request):
 
 def room(request, room_name):
     room = get_object_or_404(Room, name=room_name)
-    context = {'room': room,}
+    context = {'room': room, 'page': 'room'}
     try:
         posts = Post.objects.filter(room=room)
         context['posts'] = posts

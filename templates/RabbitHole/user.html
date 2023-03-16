@@ -1,33 +1,36 @@
 {% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
-<link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
+
 {% endblock css %} 
 {% block title %}{{user.username}}{% endblock title %}
 {% block content %}
-<div class="container">
-  <h1>{{user.username}}</h1>
-</div>
-
-<div class="grid-container">
-  <div class="grid-item">
-    <img src="{{user.avatar.url}}" alt="{{user.username}}" />
-    <hr />
-    {{user.username}}
+<header class="py-5 bg-image-full" style="background-image: url('{% static 'RabbitHole/images/bg.png' %}'); background-size: cover; background-repeat: no-repeat;">
+  <div class="text-center my-5">
+      <img class="img-fluid rounded-circle mb-4" src="{{user.avatar.url}}" alt="{{user.username}}" style="width: 10%;" />
+      <h1 class="text-green fs-3 fw-bolder">u/{{user.username}}</h1>
   </div>
-  <div class="grid-item">
+</header>
+<div class="d-flex justify-content-center m-5 w-100">
+  <div class="col-6 w-100">
     {% if posts %}
-        {% for post in posts %}
-            <div>{{post.content}}</div>
-            {% if post.image %}
-                <br/>
-                <img src="{{post.image.url}}" alt="{{post.room.name}}">
-            {% endif %}
-            <hr>
-            <br/>
-            <br/>
-        {% endfor %}
-    {% else %}
-        <div>{{user.username}} doesn't have any posts :[ </div>
-    {% endif %}
+      {% for post in posts %}
+          <span ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
+          <hr>
+          <p onclick="location.href = '{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.title}}</p>
+          {% if post.image %}
+              <br/>
+              <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">
+          {% endif %}
+          <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> <i class="bi bi-caret-up"></i> </button>
+          <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
+          <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
+          <span class="float-right" >
+              <span class = "text-secondary">{{post.created_at|timesince}} ago</span>
+          </span>
+          <hr>
+      {% endfor %}
+      {% else %}
+        <div>Posts go here</div>
+      {% endif %}
   </div>
 </div>
 {% endblock content %}

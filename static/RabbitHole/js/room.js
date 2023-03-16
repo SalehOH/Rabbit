@@ -10,15 +10,13 @@ const userEle =
 `
 const createPostEle = 
 `       
-  <a href="/${joinBtn.dataset.roomname}/create-post/">Create a Post</a>
+  <a class="nav-link" href="/${joinBtn.dataset.roomname}/create-post/">Create a Post</a>
         
 `
 if(joinBtn){
   joinBtn.addEventListener("click", ()=> {
-        console.log("clicked")
         joinRoom(joinBtn.dataset.roomname, joinBtn.dataset.userid);
         nav.insertAdjacentHTML("afterbegin", createPostEle);
-        console.log("hey")
     })
 }
 

@@ -1,23 +1,21 @@
 {% extends 'RabbitHole/base.html' %}
-
 {% load static %}
-
 {% block css %}
 {% endblock css %}
 {% block title %}Home{% endblock title %}
 {% block content %}
 <div class="container">
-<div class="row">
+
+<!--<div class="row">
     <div class = "col">
-        <h4 class="display-4 mr-5"><img src="{% static 'RabbitHole\images\logo.jpg' %}" class = "img-fluid" style="width: 10%" alt="{{post.room.name}}">    Rabbit</h4> 
+        <h4 class="display-4 mr-5"><img src="{% static 'RabbitHole\images\logo.jpg' %}" class = "img-fluid" style="width: 10%" alt="">    Rabbit</h4> 
     </div>
     <div class = "col">
         {% if request.user.is_authenticated %}
             <a href="{% url 'create_room'%}" class = "btn btn-primary bg-success float-right ">Create new Rabbit Hole</a><br>
         {% endif %}
     </div>
-</div>
-
+</div>-->
 
 <br>
     <div class="row">
@@ -38,7 +36,7 @@
         <div class="col-6">
             {% if posts %}
                 {% for post in posts %}
-                    <span ><a href="{% url 'user_page' username=post.user.username %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
+                    <span ><a href="{% url 'user_page' username=post.user.username %}"> <img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
                     <span style="position:relative;left:55%;" ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
                     <hr>
                     <p onclick="location.href = '{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.title}}</p>

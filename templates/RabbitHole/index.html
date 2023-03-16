@@ -38,11 +38,13 @@
                 {% for post in posts %}
                     <span ><a href="{% url 'user_page' username=post.user.username %}"> <img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
                     <span style="position:relative;left:55%;" ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
-                    <hr>
-                    <p onclick="location.href = '{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.title}}</p>
+                    <br><br>
+                    <b>{{ post.title }}</b>
+                    <br><br>
+                    <p onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.content}}</p>
                     {% if post.image %}
                         <br/>
-                        <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}">
+                        <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}"><br>
                     {% endif %}
 
 
@@ -50,8 +52,11 @@
                     <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
                     <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
 
+                    
+
 
                     <span class="float-right" >
+                        <button id="{{ post.id }}comment" class="btn btn-info" onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"><i class="bi bi-chat"></i> {{ post.num_replies }} </button>
                         <span class = "text-secondary">{{post.created_at|timesince}} ago</span>
                     </span>
                     <hr>

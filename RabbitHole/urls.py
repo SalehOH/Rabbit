@@ -14,4 +14,6 @@ urlpatterns = [
     path('<room_name>/<post_id>/<post_slug>/delete_reply/<reply_id>/', views.delete_reply, name='delete_reply'),
     path('like_post/<int:post_id>/', views.like_post, name='like_post'),
     path('dislike_post/<int:post_id>/', views.dislike_post, name='dislike_post'),
+    path('like_reply/<int:reply_id>/', views.like_reply, name='like_reply'),
+    path('dislike_reply/<int:reply_id>/', views.dislike_reply, name='dislike_reply'),
 ]

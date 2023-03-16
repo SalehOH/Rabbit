@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q, Count
 
-from .models import Room, Post,Reply, Like
+from .models import Room, Post, Reply, Like
 from .forms import RoomForm, PostForm, ReplyForm
 
 User = get_user_model()
@@ -17,11 +17,11 @@ def index(request):
         posts = Post.objects.filter(room__in=Room.objects.filter(
             Q(participants__id=request.user.id) |
             Q(creator=request.user)
-        )).order_by('-created_at')
+        )).annotate(num_replies=Count('replies')).order_by('-created_at')
         if len(posts) < 2:
-            posts = Post.objects.all().order_by('-created_at')
+            posts = Post.objects.all().annotate(num_replies=Count('replies')).order_by('-created_at')
     else:
-        posts = Post.objects.all().order_by('-created_at')
+        posts = Post.objects.all().annotate(num_replies=Count('replies')).order_by('-created_at')
     
     context = {'posts': posts, 'rooms': rooms, 'page': 'home'}
 
@@ -35,8 +35,8 @@ def index(request):
                     post.likestatus = True
             else:
                 post.likestatus = None
-
-
+                
+            post.num_replies = post.num_replies
 
     return render(request, 'RabbitHole/index.html', context)
 
@@ -91,9 +91,11 @@ def join_room(request, room_name, user_id):
 
 def post(request, room_name, post_id, post_slug):
     post = get_object_or_404(Post, id=post_id, room__name=room_name, slug=post_slug)
+
+    rooms = Room.objects.annotate(members=Count('participants')).order_by('-members')
     replies = post.replies.all().order_by('-created_at')
 
-    context = {'post': post, 'replies': replies}
+    context = {'post': post, 'replies': replies, 'rooms': rooms}
 
     likes = Like.objects.filter(user=request.user)
     if likes.filter(post=post).exists():
@@ -103,6 +105,17 @@ def post(request, room_name, post_id, post_slug):
             post.likestatus = True
     else:
         post.likestatus = None
+
+    for reply in replies:
+        if likes.filter(reply=reply).exists():
+            if likes.get(reply=reply).isdislike:
+                reply.likestatus = False
+            if not likes.get(reply=reply).isdislike:
+                reply.likestatus = True
+        else:
+            reply.likestatus = None
+
+    post.num_replies = post.replies.count()
 
     return render(request, 'RabbitHole/post.html', context)
 
@@ -155,6 +168,58 @@ def dislike_post(request, post_id):
     post.save()
 
     data["likes"] = post.countlikes
+
+    return JsonResponse(data)
+
+@login_required
+def like_reply(request, reply_id):
+    data = {}
+    reply = get_object_or_404(Reply, id=reply_id)
+    try:
+        like = reply.likes.get(user=request.user)
+        if like.isdislike:
+            reply.countlikes += 2
+            like.isdislike = False
+            data["result"] = True
+            like.save()
+        else:
+            reply.countlikes -= 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        reply.countlikes += 1
+        like = Like.objects.create(user=request.user, reply=reply)
+        data["result"] = True
+    reply.save()
+
+    data["likes"] = reply.countlikes
+
+
+
+    return JsonResponse(data)
+
+@login_required
+def dislike_reply(request, reply_id):
+    data = {}
+    reply = get_object_or_404(Reply, id=reply_id)
+    try:
+        like = reply.likes.get(user=request.user)
+        if not like.isdislike:
+            reply.countlikes -= 2
+            like.isdislike = True
+            data["result"] = False
+            like.save()
+        else:
+            reply.countlikes += 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        reply.countlikes -= 1
+        like = Like.objects.create(user=request.user, reply=reply, isdislike=True)
+        data["result"] = False
+    reply.save()
+
+    data["likes"] = reply.countlikes
 
     return JsonResponse(data)
 

@@ -1,51 +1,77 @@
-{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
+{% extends 'RabbitHole/base.html' %}
+
+{% load static %}
+
+{% block css %}
 
 {% endblock css %}
+
 {% block title %}Post{% endblock title %}
+
 {% block content %}
-<div class="container">
-    <h1>{{post.room.name}}</h1>
-</div>
 
-<div class="grid-container">
-  <div class="grid-item">
-      <div> {{post.title}} </div>
-    {% if post.image %}
-        <hr>
-        <img src="{{post.image.url}}" alt="{{post.room.name}}">
-    {% elif post.content %}
-      <div> {{post.title}} </div>
-    {% endif %}
-
-    {% if request.user in post.room.participants.all %}
-      <div><button onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"> Reply </button></div>
-    {% endif %}
-    {% if replies %} {% for reply in replies %}
-    <div> 
-      <span><img src="{{reply.user.avatar.url}}" alt="{{reply.user.username}}" width="120" height="100"></span> <span> - {{reply.user.username}}</span>
-      <p>
-        {{reply.title}}
-      </p>
-      <div>
-        {% if reply.image %}
-          <img src="{{reply.image.url}}" alt="{{reply.user.username}}" width="120" height="100">
-        {% elif reply.content %}
-          {{reply.content}}
-        {% endif %}
-      </div>
-    </div>
-      <hr>
-    {% endfor %}
-    {% endif %}
-    <hr>
-  </div>
-  <div class="grid-item">
-    <img src="{{post.room.avatar.url}}" alt="{{post.room.name}}">
-    <hr>
-      <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> Like </button>
-      <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
-      <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})">Dislike</button>
-  </div>  
-</div>
 <script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
-{% endblock content %}
+
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col-2">
+      <div>Rooms</div>
+      {% if rooms %}
+        <ul class="list-unstyled">
+          {% for room in rooms %}
+            <li><a href="{% url 'room' room_name=room.name %}" class="text-decoration-none">{{room.name}}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="col-6">
+      <span><a href="{% url 'user_page' username=post.user.username %}"><img style="width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
+      <span style="position:relative;left:55%;"><a href="{% url 'room' room_name=post.room.name %}"><img style="width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
+      <br><br>
+      <b>{{ post.title }}</b>
+      <br><br>
+      <p onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.content}}</p>
+      {% if post.image %}
+        <br>
+        <div><img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}"></div>
+      {% endif %}
+
+      <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"><i class="bi bi-caret-up"></i></button>
+      <span class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
+      <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
+      <span class="float-right" >
+      <button id="{{ post.id }}comment" class="btn btn-info" onclick="location.href = ''"><i class="bi bi-chat"></i> {{ post.num_replies }} </button>
+      <span class="text-secondary">{{post.created_at|timesince}} ago</span>
+      </span>
+    
+
+  {% if replies %}
+    {% for reply in replies %}
+      <div>
+        <hr>
+        <span><a href="{% url 'user_page' username=reply.user.username %}"><img style="width: 5%; border-radius: 50%;" src="{{reply.user.avatar.url}}"> {{reply.user.username}}</a></span>
+        <span style="position:relative;left:55%;"><a href="{% url 'room' room_name=reply.post.room.name %}"><img style="width: 5%; border-radius: 50%;" src="{{reply.post.room.avatar.url}}"> {{reply.post.room.name}}</a></span>
+        <br><br>
+        <div>
+          {% if reply.image %}
+            <img src="{{ reply.image.url }}" alt="{{ reply.user.username }}" width="120" height="100"><br><br>
+          {% elif reply.content %}
+            <p class="border border-info p-2" >{{ reply.content }}</p>
+          {% endif %}
+
+          <button id="{{ reply.id }}like" class="btn btn-secondary {% if reply.likestatus == True %}btn-success{% endif %}" onclick="likereply({{ reply.id }})"><i class="bi bi-caret-up"></i></button>
+          <span class="btn btn-info disabled" id="likes-{{ reply.id }}">{{ reply.countlikes }}</span>
+          <button id="{{ reply.id }}dislike" class="btn btn-secondary{% if reply.likestatus == False %} btn-danger{% endif %}" onclick="dislikereply({{ reply.id }})"><i class="bi bi-caret-down"></i></button>
+          <span class="text-secondary float-right">{{reply.created_at|timesince}} ago</span>
+        </div>
+      </div>
+
+    {% endfor %}
+
+  {% endif %}
+    </div>
+
+{% endblock %}

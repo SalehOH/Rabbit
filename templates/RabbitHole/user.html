@@ -4,9 +4,10 @@
 {% block title %}{{user.username}}{% endblock title %}
 {% block content %}
 <header class="py-5 bg-image-full" style="background-image: url('{% static 'RabbitHole/images/bg.png' %}'); background-size: cover; background-repeat: no-repeat;">
+  <script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
   <div class="text-center my-5">
       <img class="img-fluid rounded-circle mb-4" src="{{user.avatar.url}}" alt="{{user.username}}" style="width: 10%;" />
-      <h1 class="text-green fs-3 fw-bolder">u/{{user.username}}</h1>
+      <h1 class="text-white fs-3 fw-bolder">u/{{user.username}}</h1>
   </div>
 </header>
 <div class="d-flex justify-content-center m-5 w-100">

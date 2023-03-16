@@ -4,7 +4,7 @@
 
 {% block css %}
 {% endblock css %}
-
+{% block title %}Home{% endblock title %}
 {% block content %}
 <div class="container">
 <div class="row">
@@ -48,14 +48,13 @@
                     {% endif %}
 
 
-                    <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> Like </button>
+                    <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> <i class="bi bi-caret-up"></i> </button>
                     <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
-                    <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})">Dislike</button>
+                    <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
 
 
                     <span class="float-right" >
                         <span class = "text-secondary">{{post.created_at|timesince}} ago</span>
-                        <button class="btn btn-info">Reply</button>
                     </span>
                     <hr>
                 {% endfor %}

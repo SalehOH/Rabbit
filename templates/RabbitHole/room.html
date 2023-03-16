@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{% static 'RabbitHole/css/main.css'%}" />
 <script defer src="{% static 'RabbitHole/js/room.js'%}"></script>
 {% endblock css %}
-
+{% block title %}{{room.name}}{% endblock title %}
 {% block content %}
 <div class="container">
     <h1>{{room.name}}</h1>

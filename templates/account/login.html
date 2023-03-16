@@ -1,0 +1,15 @@
+{% extends 'account/main.html' %}{% load static %}
+{% block title %}Login{% endblock title %}
+{% block page %}Login{% endblock page %}
+{% block content %}
+<form class="signup" id="signup_form" method="post" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {% for feild in form %}
+    <div class="form-group row">
+      {{feild.label}}
+      {{feild}}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary w-25">Login</button>
+</form>
+{% endblock content %}

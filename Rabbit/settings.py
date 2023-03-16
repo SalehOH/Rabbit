@@ -146,7 +146,7 @@ LOGIN_REDIRECT_URL = 'home'
 #allauth config
 SITE_ID = 1
 SOCIALACCOUNT_AUTO_SIGNUP = False
-#ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 #ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_SESSION_REMEMBER = True
@@ -170,4 +170,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'LOGIN_PARAMS': {'auth_type': 'reauthenticate'},
         'OAUTH_PKCE_ENABLED': True,
     }
+}
+ACCOUNT_FORMS = {
+    'signup': 'authentication.forms.CustomSignupForm',
+    'login': 'authentication.forms.CustomLoginForm'
 }

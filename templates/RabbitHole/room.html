@@ -1,10 +1,8 @@
-{% extends 'RabbitHole/base.html' %}{% load static %}{% block css %}
+{% extends 'RabbitHole/base.html' %}{% load static %}{% block head %}
 <script defer src="{% static 'RabbitHole/js/room.js'%}"></script>
-{% endblock css %}
+{% endblock head %}
 {% block title %}{{room.name}}{% endblock title %}
 {% block content %}
-
-
 <div class="grid-container">
   <div class="grid-item">
     <div>members</div>

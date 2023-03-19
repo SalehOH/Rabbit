@@ -1,66 +1,61 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-    <!-- Content here -->
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">     
-
-        <div class="container w-50 ">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}">
-                  <span>
-                    <img class="navbar-brand" src="{% static 'RabbitHole\images\logo.png' %}" width="20"/>
-                  </span>
-                  Rabbit
-                </a> 
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Hot</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">New</a>
-              </li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <div class="container-fluid">
+        <!-- Website Name -->
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <span>
+            <img class="navbar-brand" src="{% static 'RabbitHole\images\logo.png' %}" width="20"/>
+          </span>
+              Rabbit
+        </a>
+        <!-- Hamburger Button -->
+        <button class="btn ms-auto hide-btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-search"></i></button>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Navbar Content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          {%if page == 'home' %}
+            <ul class="navbar-nav py-1">
+              <li class="nav-item"><a class="nav-link" href="">Hot</a></li>
+              <li class="nav-item"><a class="nav-link" href="">New</a></li>
+            </ul>
+            <ul class="navbar-nav mx-auto remove-serach">
+                <!-- Search Input -->
+                <li class="nav-item">
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" readonly placeholder="Search" aria-label="Search" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    </form>
+                </li>
+            </ul>
+          {% endif %}
+            <ul class="navbar-nav ms-auto">
+              {% if request.user.is_authenticated %}
+                  <li id="nav" class="nav-item">
+                    {%if page == 'home' %}
+                      <a class="nav-link" href="{% url 'create_room'%}">Create a rabbit hole</a>
+                    {% elif page == 'room' %}
+                        {% if request.user not in room.participants.all %}
+                          <a class="nav-link" id="join" data-roomName="{{room.name}}" data-userId="{{request.user.id}}" href="#"> Join</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'create_post' room_name=room.name%}"> Create a Post</a>
+                        {% endif %}
+                    {% endif %}                      
+                  </li>
+                   <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_logout'%}">Logout</i></a>
+                  </li>
+              {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_login'%}">Login</a>
+                  </li>
+                   <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_login'%}">Signup</a>
+                  </li>
+              {% endif %}
             </ul>
         </div>
-        <div class="container">
-            <div class="d-flex justify-content-center">
-              {%if page == 'home' %}
-              <form class="w-100">
-                <input class="form-control w-100 " type="search" placeholder="Search" aria-label="Search">
-              </form>
-              {% endif %}
-            </div>
-        </div> 
-        <div class="container w-50">   
-            <div class="d-flex justify-content-end pl-4 ">
-                  <ul class="navbar-nav">
-                  {% if request.user.is_authenticated %}
-                      <li id="nav" class="nav-item">
-                        {%if page == 'home' %}
-                          <a class="nav-link" href="{% url 'create_room'%}">Create a rabbit hole</a>
-                        {% elif page == 'room' %}
-                            {% if request.user not in room.participants.all %}
-                              <a class="nav-link" id="join" data-roomName="{{room.name}}" data-userId="{{request.user.id}}" href="#"> Join</a>
-                            {% else %}
-                                <a class="nav-link" href="{% url 'create_post' room_name=room.name%}"> Create a Post</a>
-                            {% endif %}
-                        {% endif %}                      
-                      </li>
-                       <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_logout'%}">Logout</i></a>
-                      </li>
-                  {% else %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login'%}">Login</a>
-                      </li>
-                       <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login'%}">Signup</a>
-                      </li>
-                  {% endif %}
-                  </ul>
-            </div>
-        </div>  
     </div>
 </nav>

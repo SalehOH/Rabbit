@@ -1,5 +1,12 @@
-.hidden{
-    opacity: 0%;
+.hide-btn{
+    display: none;
+}
+.clickable{
+    cursor: pointer;
+}
+.side-bar-image{
+    width: 340px;
+    height: auto;
 }
 .small-p {
     font-size: 1em;
@@ -31,19 +38,29 @@
     background-color: aqua;
     border-radius: 50%;
 }
-
+@media only screen and (max-width: 991px){
+    .hide-btn {
+        display: block;
+    }
+    .remove-serach{
+        display: none;
+    }
+}
 @media only screen and (max-width: 1225px) {
     .small-p {
         font-size: 0.70em;
     }
-    .main{
+
+    .main {
         padding: 0;
     }
-    .removable{
+
+    .removable {
         opacity: 0;
         display: none;
     }
-    .h6{
+
+    .h6 {
         font-size: 0.9em;
     }
 }

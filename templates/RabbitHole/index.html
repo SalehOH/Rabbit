@@ -2,90 +2,29 @@
 {% load static %}
 {% block head %}
 <link rel="stylesheet" href="{% static 'RabbitHole/css/test.css'%}">
+<script defer src="{% static 'RabbitHole/js/search.js' %}"> </script>
 {% endblock head %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-<!--<div class="container">
 
-<div class="row">
-    <div class = "col">
-        <h4 class="display-4 mr-5"><img src="{% static 'RabbitHole\images\logo.jpg' %}" class = "img-fluid" style="width: 10%" alt="">    Rabbit</h4> 
-    </div>
-    <div class = "col">
-        {% if request.user.is_authenticated %}
-            <a href="{% url 'create_room'%}" class = "btn btn-primary bg-success float-right ">Create new Rabbit Hole</a><br>
-        {% endif %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Search</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mb-3">
+                <input id="search-bar" class="form-control me-2" type="search" type="text" placeholder="Search" aria-label="Search">
+            </div>
+            <div>
+                <h5 class="h5 px-2"> Result: </h5>
+                <ul id="search-result" class="list-group list-group-flush">
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
-<br>
-    <div class="row">
-        <!-- rooms list navbar -->
-        <!--<div class="col-2">
-            <div>Rooms</div>
-            {% if rooms %}
-                <ul class="list-unstyled">
-                    {% for room in rooms %}
-                        <li><a href="{% url 'room' room_name=room.name %}" class = "text-decoration-none">{{room.name}}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-        <!-- rooms list navbar end -->
-
-        <!-- posts by users -->
-        <!--<div class="col-6">
-            {% if posts %}
-                {% for post in posts %}
-                    <span ><a href="{% url 'user_page' username=post.user.username %}"> <img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
-                    <span style="position:relative;left:55%;" ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
-                    <br><br>
-                    <b>{{ post.title }}</b>
-                    <br><br>
-                    <p onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.content}}</p>
-                    {% if post.image %}
-                        <br/>
-                        <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}"><br>
-                    {% endif %}
-
-
-                    <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> <i class="bi bi-caret-up"></i> </button>
-                    <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
-                    <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
-
-                    
-
-
-                    <span class="float-right" >
-                        <button id="{{ post.id }}comment" class="btn btn-info" onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"><i class="bi bi-chat"></i> {{ post.num_replies }} </button>
-                        <span class = "text-secondary">{{post.created_at|timesince}} ago</span>
-                    </span>
-                    <hr>
-                {% endfor %}
-            {% else %}
-                <div>Posts go here</div>
-            {% endif %}
-        </div>
-        <!-- end of posts -->
-
-        <!-- user account box -->
-        <!--<div class="col-4">
-            {% if request.user.is_authenticated %}
-                <img src="{{request.user.avatar.url}}" style="width: 25%" alt="{{request.user.username}}">
-                {{request.user.username}}
-            {% else %}
-                <div>Oh no, you aren't logged in!</div>
-            {% endif %}<hr>
-            {% if request.user.is_authenticated %}
-                <button class="btn btn-primary">Edit rabbit profile</button>
-                <button class="btn btn-info" onclick = "location.href = '{% url 'account_logout'%}'">Log out</button>
-            {% else %}
-                <button onclick="location.href = '{% url 'account_login' %}'" class="btn btn-primary">Sign-in</button>
-                <button onclick="location.href = '{% url 'account_signup' %}'" class="btn btn-primary">Sign-up</button>
-            {% endif %}
-        </div>
-        <!-- end of user account box -->
-    <!--</div>
-</div>-->
 <div class="row align-items-start main">
     <div class="col-2 sticky-top main removable"> 
         <div class="card mt-3">
@@ -96,7 +35,7 @@
                 {% if rooms %}
                     {% for room in rooms %}
                         <li class="list-group-item">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{% url 'room' room.name%}">
                                 <img class="room-list-image" src="{{room.avatar.url}}" alt="{{room.name}}">
                                 <span class="mx-2">r/{{room.name}}</span>
                             </a>
@@ -123,7 +62,7 @@
                               </div>
                           </div>
                         </div>      
-                        <div class="card-body" onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'">
+                        <div class="card-body clickable" onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'">
                           <div class="card-title"> <h6 class="h6"> {{post.title}} </h6></div>
                               {% if post.content%}
                                 <p class="small-p"> {{post.content}}</p>
@@ -158,14 +97,15 @@
             {% if request.user.is_authenticated %}
                 <img src="{{request.user.avatar.url}}" class="card-img-top" alt="{{request.user.username}}">
                 <div class="card-title h3 mt-2">u/{{request.user.username}}</div>
-            {% endif %}
-            <div class="card-body">
-                {% if request.user.is_authenticated %}
-                    <button class="btn btn-primary btn-sm">Edit rabbit profile</button>
-                    <button class="btn btn-info btn-sm" onclick="location.href = '{% url 'account_logout'%}'">Log out</button>
-                {% else %}
+                <div class="card-body">
+                    <button class="btn btn-primary btn">Edit rabbit profile</button>
+                    <button class="btn btn-info btn" onclick="location.href = '{% url 'account_logout'%}'">Log out</button>
+            {% else %}
+                <div class="h4 px-2 mt-2">Oh no, you're not logged in</div>
+                <div class="card-body">
                     <button onclick="location.href = '{% url 'account_login' %}'" class="btn btn-primary">Sign-in</button>
                     <button onclick="location.href = '{% url 'account_signup' %}'" class="btn btn-primary">Sign-up</button>
+                </div>
                 {% endif %}
             </div>
         </div>

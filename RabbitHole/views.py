@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.core import serializers
 from django.http import JsonResponse
 from django.db.models import Q, Count
 
@@ -39,6 +40,14 @@ def index(request):
             post.num_replies = post.num_replies
 
     return render(request, 'RabbitHole/index.html', context)
+
+def search(request):
+    query = request.GET.get('q')
+    users = User.objects.filter(username__icontains=query).values('username', 'avatar')
+    rooms = Room.objects.filter(name__icontains=query).values('name', 'avatar')
+
+    data = {'users': list(users), 'rooms': list(rooms)}
+    return JsonResponse(data)
 
 def room(request, room_name):
     room = get_object_or_404(Room, name=room_name)

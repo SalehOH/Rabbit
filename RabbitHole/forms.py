@@ -8,7 +8,7 @@ class RoomForm(forms.ModelForm):
         fields = ['name', 'avatar',]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
-            'avatar': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'avatar': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
         
 
@@ -19,7 +19,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'content': forms.Textarea(attrs={'class': 'form-control textF', 'data-type': 'text'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file imageF', 'data-type': 'picture'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control imageF', 'data-type': 'picture'}),
         }
 
 
@@ -30,5 +30,5 @@ class ReplyForm(forms.ModelForm):
         widgets = {  
             'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'content': forms.Textarea(attrs={'class': 'form-control textF', 'data-type': 'text'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file imageF', 'data-type': 'picture'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control imageF', 'data-type': 'picture'}),
         }

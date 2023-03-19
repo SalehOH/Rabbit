@@ -16,18 +16,32 @@
     border-radius: 50%;
 }
 
-.card-body {
-    background-color: #f3f3f3;
-    ;
+.card-body{
+    background-color: #f3f3f3;;
+}
+.card-header{
+    background-color:#e0eff0;
+}
+.main{
+    padding-top: 50px;
+}
+.room-list-image{
+    width: 25px;
+    height: auto;
+    background-color: aqua;
+    border-radius: 50%;
 }
 
-.card-header {
-    background-color: #fff;
-}
-
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 1225px) {
     .small-p {
         font-size: 0.70em;
+    }
+    .main{
+        padding: 0;
+    }
+    .removable{
+        opacity: 0;
+        display: none;
     }
     .h6{
         font-size: 0.9em;

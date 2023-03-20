@@ -1,7 +1,6 @@
 from allauth.account.forms import SignupForm, LoginForm
 from django.contrib.auth import get_user_model
 from django import forms
-from django.forms import FileInput
 
 User = get_user_model()
 

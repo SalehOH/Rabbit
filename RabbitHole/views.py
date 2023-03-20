@@ -71,7 +71,6 @@ def create_room(request):
             room = form.save(commit=False)
             room.creator = request.user
             room.save()
-            room.participants.add(request.user)
             messages.success(request, 'Room created successfully!')
             return redirect('room', room_name=room.name)
     else:
@@ -250,8 +249,8 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post,id=post_id)
     if request.user == post.user :
         post.delete()
-        response = redirect('room',room_name=post.room.name)
         messages.success(request, 'Post deleted successfully!')
+        response = redirect(request.META.get('HTTP_REFERER'))
     else:
         response = redirect('home')
     return response
@@ -281,7 +280,7 @@ def delete_reply(request, reply_id):
          if reply.user == request.user :
              reply.delete()
              messages.success(request, 'Reply deleted successfully!')
-         response = redirect('post',room_name = post.room.name, post_id = post.id, post_slug = post.slug)
+         response = redirect(request.META.get('HTTP_REFERER'))
      else:
          response = redirect('home')
      return response

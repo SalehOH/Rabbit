@@ -77,3 +77,16 @@ function dislikereply(replyID) {
   };
   request.send();
 }
+
+const posts = document.getElementById("posts")
+const confirmDeleteBtn = document.getElementById("confirm-delete")
+
+if (posts){
+  posts.addEventListener("click", function(e){
+    const parent = e.target.parentElement
+    console.log(parent)
+    if(parent.classList.contains("delete-post")){
+      confirmDeleteBtn.setAttribute("href",`/delete_post/${parent.dataset.postId}`)
+    }
+  })
+}

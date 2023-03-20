@@ -1,99 +1,38 @@
 {% extends 'RabbitHole/base.html' %}{% load static %}{% block head %}
+<link rel="stylesheet" href="{% static 'RabbitHole/css/test.css' %}">
 <script defer src="{% static 'RabbitHole/js/room.js'%}"></script>
 {% endblock head %}
 {% block title %}{{room.name}}{% endblock title %}
 {% block content %}
 
-<script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
-<br>
-<div class = "container">
-  <div class="row">
-    <!-- members list navbar -->
-     <div class="col-2">
-      <div>members</div>
-      <ul id="members" class = "list-unstyled" data-curuser="{{request.user.username}}">
-      {% for participant in room.participants.all %}
-          <li>
-              <a href="{% url 'user_page' username=participant.username %}">{{participant.username}}</a>
-          </li>
-      {% endfor %}
-      </ul>
-    </div>
-    <!-- members list navbar end -->
-
-
-    <!-- posts by users -->
-    <div class="col-6">
-        {% if posts %}
-            {% for post in posts %}
-                <span ><a href="{% url 'user_page' username=post.user.username %}"> <img style = "width: 5%; border-radius: 50%;" src="{{post.user.avatar.url}}"> {{post.user.username}}</a></span>
-                <span style="position:relative;left:55%;" ><a href="{% url 'room' room_name=post.room.name %}"><img style = "width: 5%; border-radius: 50%;" src="{{post.room.avatar.url}}"> {{post.room.name}}</a></span>
-                <br><br>
-                <b>{{ post.title }}</b>
-                <br><br>
-                <p onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'" class="border border-info p-2">{{post.content}}</p>
-                {% if post.image %}
-                    <br/>
-                    <img src="{{post.image.url}}" style="width: 25%" alt="{{post.room.name}}"><br>
-                {% endif %}
-
-
-                <button id="{{ post.id }}like" class="btn btn-secondary {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> <i class="bi bi-caret-up"></i> </button>
-                <span  class="btn btn-info disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
-                <button id="{{ post.id }}dislike" class="btn btn-secondary{% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
-
-                
-
-
-                <span class="float-right" >
-                    <button id="{{ post.id }}comment" class="btn btn-info" onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"><i class="bi bi-chat"></i> {{ post.num_replies }} </button>
-                    <span class = "text-secondary">{{post.created_at|timesince}} ago</span>
-                </span>
-                <hr>
-            {% endfor %}
-        {% else %}
-            <div>Posts go here</div>
-        {% endif %}
-    </div>
-    <!-- end of posts -->
-
-    <!-- user account box -->
-    <div class="col-4">
-        {% if request.user.is_authenticated %}
-            <img src="{{request.user.avatar.url}}" style="width: 25%" alt="{{request.user.username}}">
-            {{request.user.username}}
-        {% else %}
-            <div>Oh no, you aren't logged in!</div>
-        {% endif %}<hr>
-        {% if request.user.is_authenticated %}
-            <button class="btn btn-primary">Edit rabbit profile</button>
-            <button class="btn btn-info" onclick = "location.href = '{% url 'account_logout'%}'">Log out</button>
-        {% else %}
-            <button onclick="location.href = '{% url 'account_login' %}'" class="btn btn-primary">Sign-in</button>
-            <button onclick="location.href = '{% url 'account_signup' %}'" class="btn btn-primary">Sign-up</button>
-        {% endif %}
-    </div>
-    <!-- end of user account box -->
-</div>
-</div>
-<!-- 
-  <div class="grid-item">
-    {% if posts %}
-        {% for post in posts %}
-            <div>{{post.content}} <hr></div>
-            <a style=" border: 2px soild grey" href="{% url 'post' room.name post.id post.slug%}"> view post</a>
-        {% endfor %}
-    {% else %}
-        <div>Posts go here</div>
-    {% endif %}
-
+<header class="py-5 bg-image-full" style="background-image: url('{% static 'RabbitHole/images/bg.png' %}'); background-size: cover; background-repeat: no-repeat;">
+  <div class="text-center my-5">
+      <img class="img-fluid rounded-circle mb-4" src="{{room.avatar.url}}" alt="{{room.name}}" style="width: 10%;" />
+      <h1 class="text-white fs-3 fw-bolder">r/{{room.name}}</h1>
   </div>
-  <div class="grid-item">
-    {% if room.avatar %}
-    <img src="{{room.avatar.url}}" alt="{{room.name}}">
-    {% endif %}
-    <hr>
-    {{room.name}}
-  </div>  
-</div> -->
+</header>
+<div class="row align-items-start main">
+    <div class="col-3 sticky-top main removable"> 
+        <div class="card mt-3">
+            <div class="card-header">
+                Members
+            </div>
+            <ul id="members" class="list-group list-group-flush" data-curuser="{{request.user.username}}">
+                {% if room.participants %}
+                    {% for participant in room.participants.all %}
+                        <li class="list-group-item">
+                            <a class="nav-link" href="{% url 'user_page' participant.username%}">
+                                <img class="room-list-image" src="{{participant.avatar.url}}" alt="{{participant.username}}">
+                                <span class="mx-2">u/{{participant.username}}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="col main">
+        {% include 'RabbitHole/post-comp.html' %}
+    <div>
+</div>
 {% endblock content %}

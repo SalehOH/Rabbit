@@ -130,53 +130,50 @@ def post(request, room_name, post_id, post_slug):
 
 @login_required
 def like_post(request, post_id):
-    data = {}
     post = get_object_or_404(Post, id=post_id)
-    try:
-        like = post.likes.get(user=request.user)
-        if like.isdislike:
-            post.countlikes += 2
-            like.isdislike = False
-            data["result"] = True
-            like.save()
-        else:
-            post.countlikes -= 1
-            like.delete()
-            data["result"] = None
-    except Like.DoesNotExist:
-        post.countlikes += 1
-        like = Like.objects.create(user=request.user, post=post)
-        data["result"] = True
-    post.save()
-
-    data["likes"] = post.countlikes
-
-
-
+    data = like_helper(request,post,'post')
+    #try:
+    #    like = post.likes.get(user=request.user)
+    #    if like.isdislike:
+    #        post.countlikes += 2
+    #        like.isdislike = False
+    #        data["result"] = True
+    #        like.save()
+    #    else:
+    #        post.countlikes -= 1
+    #        like.delete()
+    #        data["result"] = None
+    #except Like.DoesNotExist:
+    #    post.countlikes += 1
+    #    like = Like.objects.create(user=request.user, post=post)
+    #    data["result"] = True
+    #post.save()
+#
+    #data["likes"] = post.countlikes
     return JsonResponse(data)
 
 @login_required
-def dislike_post(request, post_id):
-    data = {}
+def dislike_post(request, post_id): 
     post = get_object_or_404(Post, id=post_id)
-    try:
-        like = post.likes.get(user=request.user)
-        if not like.isdislike:
-            post.countlikes -= 2
-            like.isdislike = True
-            data["result"] = False
-            like.save()
-        else:
-            post.countlikes += 1
-            like.delete()
-            data["result"] = None
-    except Like.DoesNotExist:
-        post.countlikes -= 1
-        like = Like.objects.create(user=request.user, post=post, isdislike=True)
-        data["result"] = False
-    post.save()
-
-    data["likes"] = post.countlikes
+    data = dislike_helper(request, post, 'post')
+    #try:
+    #    like = post.likes.get(user=request.user)
+    #    if not like.isdislike:
+    #        post.countlikes -= 2
+    #        like.isdislike = True
+    #        data["result"] = False
+    #        like.save()
+    #    else:
+    #        post.countlikes += 1
+    #        like.delete()
+    #        data["result"] = None
+    #except Like.DoesNotExist:
+    #    post.countlikes -= 1
+    #    like = Like.objects.create(user=request.user, post=post, isdislike=True)
+    #    data["result"] = False
+    #post.save()
+    #
+    #data["likes"] = post.countlikes
 
     return JsonResponse(data)
 
@@ -296,3 +293,53 @@ def user(request, username):
 
     context = {'user': user,'posts': posts,}
     return render(request, 'RabbitHole/user.html', context)
+
+def like_helper(request,model, name):
+    data = {}
+    try:
+        like = model.likes.get(user=request.user)
+        if like.isdislike:
+            model.countlikes += 2
+            like.isdislike = False
+            data["result"] = True
+            like.save()
+        else:
+            model.countlikes -= 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        model.countlikes += 1
+        if name == 'post':
+            like = Like.objects.create(user=request.user, post=model)
+        else:
+             like = Like.objects.create(user=request.user, reply=model)
+        data["result"] = True
+    model.save()
+    data["likes"] = model.countlikes
+    return data
+
+def dislike_helper(request, model, name):
+    data = {}
+    try:
+        like = model.likes.get(user=request.user)
+        if not like.isdislike:
+            model.countlikes -= 2
+            like.isdislike = True
+            data["result"] = False
+            like.save()
+        else:
+            model.countlikes += 1
+            like.delete()
+            data["result"] = None
+    except Like.DoesNotExist:
+        model.countlikes -= 1
+        if name == 'post':
+            like = Like.objects.create(user=request.user, post=model, isdislike=True)
+        else:
+            like = Like.objects.create(user=request.user, room=model, isdislike=True)
+        data["result"] = False
+    model.save()
+
+    data["likes"] = model.countlikes
+
+    return data

@@ -9,8 +9,11 @@
               Rabbit
         </a>
         <!-- Hamburger Button -->
-        <button class="btn ms-auto hide-btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-search"></i></button>
-        
+        {%if page == 'home' %}
+          <button class="btn ms-auto hide-btn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-search"></i></button>
+        {% elif page == 'room' and request.user in room.participants.all %}
+          <a class="nav-link ms-auto hide-btn mx-3" href="{% url 'create_post' room_name=room.name%}"> <i class="bi bi-plus-lg" style="font-size: 27px;"></i></a>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -38,9 +41,9 @@
                       <a class="nav-link" href="{% url 'create_room'%}">Create a rabbit hole</a>
                     {% elif page == 'room' %}
                         {% if request.user not in room.participants.all %}
-                          <a class="nav-link" id="join" data-roomName="{{room.name}}" data-userId="{{request.user.id}}" href="#"> Join</a>
+                          <a class="nav-link" id="join" data-roomName="{{room.name}}" data-userId="{{request.user.id}}" href=""> Join</a>
                         {% else %}
-                            <a class="nav-link" href="{% url 'create_post' room_name=room.name%}"> Create a Post</a>
+                            <a class="nav-link remove-serach" href="{% url 'create_post' room_name=room.name%}"> Create a Post</a>
                         {% endif %}
                     {% endif %}                      
                   </li>

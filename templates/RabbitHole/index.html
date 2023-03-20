@@ -46,51 +46,7 @@
         </div>
     </div>
     <div class="col main">
-        <div class="container">
-            {% if posts %}
-                {% for post in posts %}
-                    <div class="card my-3">
-                        <div class="card-header">
-                          <div class="d-flex mb-1">
-                              <div class="px-2">
-                                <a href="{% url 'room' post.room.name %}">
-                                  <img class="card-image mr-4" src="{{post.room.avatar.url}}" alt="" >
-                                  </a>
-                              </div>
-                              <div class="px-2">
-                                  <a class="nav-link mt-3 pl-5" href="{% url 'room' post.room.name %}">r/{{post.room.name}}</a>
-                              </div>
-                          </div>
-                        </div>      
-                        <div class="card-body clickable" onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'">
-                          <div class="card-title"> <h6 class="h6"> {{post.title}} </h6></div>
-                              {% if post.content%}
-                                <p class="small-p"> {{post.content}}</p>
-                              {% else %}
-                                <img class="img-fluid" src="{{post.image.url}}" alt="">
-                              {% endif %}
-                        </div>
-                            <div class="card-footer text-muted">
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <button id="{{ post.id }}like" class="btn btn-secondary btn-sm pb-2 mr-1 mb-0 {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> <i class="bi bi-caret-up"></i> </button>
-                                        <span  class="btn btn-info btn-sm pb-2 mx-1 mb-0 remove-curser disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
-                                        <button id="{{ post.id }}dislike" class="btn btn-secondary btn-sm pt-2 ml-1 mb-0 {% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <button id="{{ post.id }}comment" class="btn btn-info btn-sm pt-1 mb-0" onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"><i class="bi bi-reply-fill"></i> {{ post.num_replies }} </button>
-                                    </div>
-                                    <div class="d-flex align-self">
-                                        <p class="align-self-center mb-0 small-p">{{post.created_at|timesince}} ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                {% endfor %}
-            {% else %}
-                <div>Posts go here</div>
-            {% endif %}
-        </div>
+        {% include 'RabbitHole/post-comp.html' %}
     </div>
     <div class="col-3 sticky-top main removable">
         <div class="card mt-3">
@@ -111,5 +67,4 @@
         </div>
     </div>
 </div>
-<script src="{% static 'RabbitHole/js/likemanagement.js' %}"></script>
 {% endblock content %}

@@ -1,15 +1,33 @@
-{% extends 'account/main.html' %}{% load static %}
-{% block title %}Login{% endblock title %}
-{% block page %}Login{% endblock page %}
+{% extends 'RabbitHole/base.html' %}{% load static %}{% load account socialaccount %}
+{% block title %}Sign up{% endblock title %}
 {% block content %}
-<form class="signup" id="signup_form" method="post" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {% for feild in form %}
-    <div class="form-group row">
-      {{feild.label}}
-      {{feild}}
-    </div>
-  {% endfor %}
-  <button type="submit" class="btn btn-primary w-25">Login</button>
-</form>
+<div class="card">
+  <div class="card-header text-center">Login with Rabbit</div>
+    <div class="card-body">
+      <div class="container-sm">
+        <h5 class="card-title text-center">
+          <a
+            href="{% provider_login_url 'google'%}"
+            class="btn btn-secondary w-50"
+            ><i class="bi bi-google g" style="font-size: 20px"></i>Login</a
+          >
+        </h5>
+        <h5 class="text-center">OR</h5>
+        <br>
+          <form class="login" id="signup_form" method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+              {% for feild in form %}
+                {{feild.label}}
+                <div class="input-group mb-3">
+                  {{feild}}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="mt-5 text-center">
+              <button type="submit" class="w-50 btn btn-lg btn-outline-primary text-center">Login</button>
+            </div>
+          </form>
+      </div>
+  <div class="card-footer text-muted text-center">Not a member? <a class="link-secondary" href="{% url 'account_signup'%}"> Sign up</a></div>
+</div>
 {% endblock content %}

@@ -19,7 +19,7 @@
 .card-image {
     width: 50px;
     height: auto;
-    background-color: aqua;
+    background-color: rgb(252, 252, 252);
     border-radius: 50%;
 }
 
@@ -35,7 +35,7 @@
 .room-list-image{
     width: 25px;
     height: auto;
-    background-color: aqua;
+    background-color: rgb(252, 252, 252);
     border-radius: 50%;
 }
 @media only screen and (max-width: 991px){

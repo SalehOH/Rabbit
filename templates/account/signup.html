@@ -1,27 +1,50 @@
-{% extends 'account/main.html' %}{% load static %}
+{% extends 'RabbitHole/base.html' %}{% load static %}{% load account socialaccount %}
 {% block title %}Sign up{% endblock title %}
-{% block page %}Sign up{% endblock page %}
 {% block content %}
-
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  <div class="form-group row">
-    <label for="inputemail">Email</label>
-    {{form.email}}
-  </div>
-  <div class="form-group row">
-    <label for="inputemail">Username</label>
-    <label class="sr-only" for="inlineFormInputGroupUsername"
-      >Username</label
-    >
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <div class="input-group-text">u</div>
-      </div>
-      {{form.username}}
+<div class="card">
+  <div class="card-header text-center">Sign up with Rabbit</div>
+    <div class="card-body">
+      <div class="container-sm">
+        <h5 class="card-title text-center">
+          <a
+            href="{% provider_login_url 'google'%}"
+            class="btn btn-secondary w-50"
+            ><i class="bi bi-google g" style="font-size: 20px"></i> Sign up</a
+          >
+        </h5>
+        <h5 class="text-center">OR</h5>
+        <br>
+          <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+              <span class="input-group-text small-p" id="basic-addon1">Email</span>
+              {{form.email}}
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text small-p" id="basic-addon1">u</span>
+              {{form.username}}
+            </div>
+             <div class="input-group mb-3">
+              <span class="input-group-text small-p" id="basic-addon1">Password</span>
+                {{form.password1}}
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text small-p" id="basic-addon1">Confirm Password</span>
+                {{form.password1}}
+            </div>
+            <label for="avatar" class="form-label">Upload your avatar</label>
+            <div class="input-group mb-3">
+              {{form.avatar}}
+            </div>
+            <div class="mt-5 text-center">
+              <button type="submit" class="w-50 btn btn-lg btn-outline-primary text-center">Sign up</button>
+            </div>
+          </form>
+        </div>
     </div>
-  </div>
-  <div class="form-group row">
+  <div class="card-footer text-muted text-center">Already a member? <a class="link-secondary" href="{% url 'account_login'%}"> login</a></div>
+</div>
+  <!--<div class="form-group row">
     <label for="inputPassword5">Password</label>
     {{form.password1}}
     <small id="passwordHelpBlock" class="form-text text-muted">
@@ -36,6 +59,9 @@
       Your must rewrite the same password
     </small>
   </div>
-  <button type="submit" class="btn btn-primary w-25">Sign up</button>
-</form>
+  <div class="form-group row">
+     <label for="inputImage">Avatar</label>
+     {{form.avatar}}
+  </div>-->
+
 {% endblock content %}

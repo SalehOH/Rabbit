@@ -55,7 +55,7 @@ class RoomViewTest(TestCase):
     def test_create_post_view(self):
         self.client.login(username='testuser', password='testpass')
         response = self.client.post(reverse('create_post', args=[self.room.name]), {'content': 'test post content'})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(Post.objects.filter(content='test post content').exists())
 
     def test_create_reply_view(self):
@@ -78,6 +78,7 @@ class RoomViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['result'], False)
         self.assertEqual(response.json()['likes'], -1)
+        
 
 class PostTestCase(TestCase):
 

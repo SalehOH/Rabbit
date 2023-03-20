@@ -3,10 +3,11 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Room, Post, Reply, Like
+from RabbitHole.forms import PostForm,ReplyForm,RoomForm
 
 User = get_user_model()
 
-
+#views tests
 
 class RoomViewTest(TestCase):
     def setUp(self):
@@ -126,3 +127,118 @@ class RoomTestCase(TestCase):
         creator = self.room.creator
         self.assertEqual(creator, self.user)
         
+
+#fourms test#
+
+
+
+class RoomFormTest(TestCase):
+    def test_form(self):
+        data = {
+            'name': 'test name',
+                'avatar': 'default.png'}
+        
+        form = RoomForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    
+
+
+class PostFormTest(TestCase):
+    def post_form_Test(self):
+        data = {'title': 'Test Post', 'content': 'test post', 'image': 'test_image.jpg'}
+        form = PostForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    
+
+
+class ReplyFormTest(TestCase):
+    def test_valid_form(self):
+        data = {'title': 'Test Reply', 'content': 'This is a test reply', 'image': 'test_image.jpg'}
+        form = ReplyForm(data=data)
+        self.assertTrue(form.is_valid())
+
+
+    
+#urltest
+
+class TestUrls(TestCase):
+
+    def test_home_url(self):
+        url = reverse('home')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_search_url(self):
+        url = reverse('search')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_page_url(self):
+        url = reverse('user_page', args=['testuser'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_room_url(self):
+        url = reverse('create_room')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_room_url(self):
+        url = reverse('room', args=['testroom'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_join_room_url(self):
+        url = reverse('join_room', args=['testroom', '123'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        
+    
+    def test_create_post_url(self):
+        url = reverse('create_post', args=['testpost'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        
+    def test_post_url(self):
+        url = reverse('post')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        
+    def test_create_reply_url(self):
+        url = reverse('create_reply',args=['testreply'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+       
+        
+    
+    def test_delete_post_url(self):
+        url = reverse('delete_post')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        
+    def test_delete_reply_url(self):
+        url = reverse('delete_reply')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        
+    def test_like_post_url(self):
+        url = reverse('like_post', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_dislike_post_url(self):
+        url = reverse('dislike_post', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_like_reply_url(self):
+        url = reverse('like_reply', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_dislike_reply_url(self):
+        url = reverse('dislike_reply', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

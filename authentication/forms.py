@@ -21,7 +21,11 @@ class CustomSignupForm(SignupForm):
                 widget.attrs.update({'placeholder': attrs[field_name][0], 'class': attrs[field_name][1]})
             widget.attrs.update(attrs)
             widget.attrs.pop('autofocus', None)
-        
+    def save(self, request):
+        user = super().save(request)
+        user.avatar = self.cleaned_data['avatar']
+        user.save()
+        return user 
 
 class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):

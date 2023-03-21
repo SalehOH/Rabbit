@@ -85,18 +85,19 @@ const confirmDeleteBtn = document.getElementById("confirm-delete")
 if (posts){
   posts.addEventListener("click", function(e){
     const parent = e.target.parentElement
-    console.log(parent)
+    console.log("got it")
     if(parent.classList.contains("delete-post")){
+      console.log("went")
       confirmDeleteBtn.setAttribute("href",`/delete_post/${parent.dataset.postId}`)
     }
   })
 }
+
 if(replies){
-  posts.addEventListener("click", function(e){
+  replies.addEventListener("click", function(e){
     const parent = e.target.parentElement
-    console.log(parent)
-    if(parent.classList.contains("delete-post")){
-      confirmDeleteBtn.setAttribute("href",`/delete_reply/${parent.dataset.replyID}`)
+    if(parent.classList.contains("delete-reply")){
+      confirmDeleteBtn.setAttribute("href",`/delete_reply/${parent.dataset.replyId}`)
     }
   })
 }

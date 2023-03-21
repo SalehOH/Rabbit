@@ -6,7 +6,8 @@
   <div class="col main">
     <div class="container-xl">
       <!-- Post -->
-      <div class="card my-5">
+      <div class="py-3"></div>
+      <div id="posts" class="card my-5">
           <div class="card-header">
             <div class="d-flex mb-1">
                 <div class="px-2">
@@ -18,7 +19,7 @@
                     <a class="nav-link mt-3 pl-5" href="{% url 'user_page' post.user.username %}">u/{{post.user.username}}</a>
                 </div>
                 {% if request.user == post.user %}
-                <div class="ms-auto">
+                <div class="ms-auto pt-1">
                       <button type="button" class="btn delete-post" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-post-id="{{post.id}}"><i class="bi bi-trash3"></i></button>
                </div>
                {% endif %}
@@ -26,7 +27,7 @@
           </div>
         <div class="card-body">
           <h5 class="card-title">{{post.title}}</h5>
-            <p class="card-text">
+            <p class="card-text small-p text-muted">
               {% if post.content%}
                   {{post.content}}
               {% elif post.image%}
@@ -50,56 +51,55 @@
             </div>
         </div>
       </div>
-      <div id="replies" class="container-xl">
-        {% if replies %}
-        <h5 class="h5"> Replies ({{replies.count}}) </h5>
-            {% for reply in replies %}
-                <div class="card my-1">
-                    <div class="card-header header-reply">
-                      <div class="d-flex mb-1">
-                          <div class="px-2">
-                            <a href="{% url 'user_page' reply.user.username %}">
-                              <img class="card-image mr-4" src="{{reply.user.avatar.url}}" alt="{{reply.user.username}}" >
-                              </a>
-                          </div>
-                          <div class="px-2">
-                              <a class="nav-link mt-3 pl-5" href="{% url 'user_page' reply.user.username %}">u/{{reply.user.username}}</a>
-                          </div>
-                          {% if request.user == reply.user %}
-                          <div class="ms-auto">
-                            <button type="button" class="btn delete-post" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-post-id="{{post.id}}"><i class="bi bi-trash3"></i></button>
-                         </div>
-                         {% endif %}
-                      </div>
-                    </div>      
-                    <div class="card-body">
-                      <div class="card-title"> <h6 class="h6"> {{reply.title}} </h6></div>
-                          {% if reply.content%}
-                            <p class="small-p"> {{reply.content}}</p>
-                            {% elif reply.image%}
-                            <img class="img-fluid" src="{{reply.image.url}}" alt="">
-                          {% endif %}
-                    </div>
-                        <div class="card-footer text-muted">
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <button id="{{ reply.id }}like" class="btn btn-secondary btn-sm pb-2 mr-1 mb-0 {% if reply.likestatus == True %}btn-success{% endif %}" onclick="likereply({{ reply.id }})"> <i class="bi bi-caret-up"></i> </button>
-                                    <span  class="btn btn-info btn-sm pb-2 mx-1 mb-0 remove-curser disabled" id="likes-{{ reply.id }}">{{ reply.countlikes }}</span>
-                                    <button id="{{ reply.id }}dislike" class="btn btn-secondary btn-sm pt-2 ml-1 mb-0 {% if reply.likestatus == False %} btn-danger{% endif %}" onclick="dislikereply({{ reply.id }})"><i class="bi bi-caret-down"></i></button>
-                                </div>
-                                <div class="ms-auto">
-                                    <p class="align-self-center mb-0 small-p">{{reply.created_at|timesince}} ago</p>
-                                </div>
+      {% if replies %}
+        <div id="replies" class="container-xl">
+              <h5 class="h5"> Replies ({{replies.count}}) </h5>
+              {% for reply in replies %}
+                  <div class="card my-1">
+                      <div class="card-header header-reply">
+                        <div class="d-flex mb-1">
+                            <div class="px-2">
+                              <a href="{% url 'user_page' reply.user.username %}">
+                                <img class="card-image mr-4" src="{{reply.user.avatar.url}}" alt="{{reply.user.username}}" >
+                                </a>
                             </div>
+                            <div class="px-2">
+                                <a class="nav-link mt-3 pl-5" href="{% url 'user_page' reply.user.username %}">u/{{reply.user.username}}</a>
+                            </div>
+                            {% if request.user == reply.user %}
+                            <div class="ms-auto">
+                              <button type="button" class="btn delete-reply" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-reply-id="{{reply.id}}"><i class="bi bi-trash3"></i></button>
+                           </div>
+                           {% endif %}
                         </div>
+                      </div>      
+                      <div class="card-body">
+                        <div class="card-title"> <h6 class="h6"> {{reply.title}} </h6></div>
+                            {% if reply.content%}
+                              <p class="small-p"> {{reply.content}}</p>
+                              {% elif reply.image%}
+                              <img class="img-fluid" src="{{reply.image.url}}" alt="">
+                            {% endif %}
+                      </div>
+                      <div class="card-footer text-muted">
+                          <div class="d-flex justify-content-between">
+                              <div class="d-flex align-items-center">
+                                  <button id="{{ reply.id }}like" class="btn btn-secondary btn-sm pb-2 mr-1 mb-0 {% if reply.likestatus == True %}btn-success{% endif %}" onclick="likereply({{ reply.id }})"> <i class="bi bi-caret-up"></i> </button>
+                                  <span  class="btn btn-info btn-sm pb-2 mx-1 mb-0 remove-curser disabled" id="likes-{{ reply.id }}">{{ reply.countlikes }}</span>
+                                  <button id="{{ reply.id }}dislike" class="btn btn-secondary btn-sm pt-2 ml-1 mb-0 {% if reply.likestatus == False %} btn-danger{% endif %}" onclick="dislikereply({{ reply.id }})"><i class="bi bi-caret-down"></i></button>
+                              </div>
+                              <div class="ms-auto">
+                                  <p class="align-self-center mb-0 small-p">{{reply.created_at|timesince}} ago</p>
+                              </div>
+                          </div>
+                      </div>
                     </div>
-            {% endfor %}
-            <div class="my-5 py-5"></div>
-        {% else %}
-            <h5 class="h5"> Replies (0) </h5>
-        {% endif %}
-      </div>
-      
+                {% endfor %}
+                  <div class="my-5 py-5"></div>
+        </div>
+      {% else %}
+          <h5 class="h5"> Replies (0) </h5>
+      {% endif %}
     </div>
   </div>
   <div class="col-2 sticky-top main removable">

@@ -134,10 +134,14 @@ def create_post(request, room_name):
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post,id=post_id)
+    room_name = post.room.name
     if request.user == post.user :
         post.delete()
         messages.success(request, 'Post deleted successfully!')
-        response = redirect(request.META.get('HTTP_REFERER'))
+        if len(request.META.get('HTTP_REFERER')[7:].split("/")) >=5:
+            response = redirect('room', room_name)
+        else:
+            response = redirect(request.META.get('HTTP_REFERER'))
     else:
         response = redirect('home')
     return response

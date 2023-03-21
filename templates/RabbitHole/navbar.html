@@ -1,6 +1,5 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top bg-custom">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <!-- Website Name -->
         <a class="navbar-brand" href="{% url 'home' %}">
           <span>
@@ -21,7 +20,7 @@
         <!-- Navbar Content -->
         <div class="collapse navbar-collapse" id="navbarNav">
           {%if page == 'home' %}
-            <ul class="navbar-nav py-1">
+            <ul class="navbar-nav p-1">
               <li class="nav-item"><a class="nav-link" href="">Hot</a></li>
               <li class="nav-item"><a class="nav-link" href="">New</a></li>
             </ul>
@@ -34,7 +33,7 @@
                 </li>
             </ul>
           {% endif %}
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto p-1">
               {% if request.user.is_authenticated %}
                   <li id="nav" class="nav-item">
                     {%if page == 'home' %}
@@ -60,5 +59,4 @@
               {% endif %}
             </ul>
         </div>
-    </div>
 </nav>

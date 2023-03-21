@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="row align-items-start main">
-    <div class="col-2 sticky-top main removable"> 
+    <div class="col-2 sticky-top main removable">
         <div class="card mt-3">
             <div class="card-header">
                 Rooms
@@ -48,7 +48,7 @@
     <div class="col main">
         {% include 'RabbitHole/post-comp.html' %}
     </div>
-    <div class="col-3 sticky-top main removable">
+    <div class="col-2 sticky-top main removable">
         <div class="card mt-3">
             {% if request.user.is_authenticated %}
                 <img src="{{request.user.avatar.url}}" class="card-img-top" alt="{{request.user.username}}">

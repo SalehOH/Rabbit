@@ -15,3 +15,8 @@ class CustomUser(AbstractUser):
     bio = models.CharField(max_length=250, null=True)
 
     REQUIRED_FIELDS = ['email',]
+
+    def avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return static('default_avatars/default.png')

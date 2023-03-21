@@ -8,7 +8,9 @@
   <div class="text-center my-5">
       <img class="img-fluid rounded-circle mb-4" src="{{user.avatar.url}}" alt="{{user.username}}" style="width: 10%;" />
       <h1 class="text-white fs-3 fw-bolder">u/{{user.username}}</h1>
-      <button class="btn btn-primary btn mt-3">Edit rabbit profile</button>
+      {% if request.user == user %}
+        <button class="btn btn-primary btn mt-3">Edit rabbit profile</button>
+      {% endif %}
   </div>
 </header>
 {% include 'RabbitHole/post-comp.html' %}

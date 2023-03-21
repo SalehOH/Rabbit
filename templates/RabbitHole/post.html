@@ -1,31 +1,29 @@
-{% extends 'RabbitHole/base.html' %} 
-{% load static %}
+{% extends 'RabbitHole/base.html' %} {% load static %}
+{% block head %} <link rel="stylesheet" href="{% static 'RabbitHole/css/test.css'%}"> {% endblock head %}
 {% block title %}Post{% endblock title %}
 {% block content %}
-<div class="d-flex justify-content-center m-1 mt-5 w-100">
-    <div class="col-md-6">
+<div class="row align-items-start main">
+  <div class="col main">
+    <div class="container-xl">
       <!-- Post -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col-1 mr-3">
-              <img
-                src="{{post.user.avatar.url}}"
-                class="rounded-circle"
-                alt="User Avatar"
-                width="60"
-                height="60"
-              />
+      <div class="card my-5">
+          <div class="card-header">
+            <div class="d-flex mb-1">
+                <div class="px-2">
+                  <a href="{% url 'user_page' post.user.username %}">
+                    <img class="card-image mr-4" src="{{post.user.avatar.url}}" alt="{{post.user.username}}" >
+                    </a>
+                </div>
+                <div class="px-2">
+                    <a class="nav-link mt-3 pl-5" href="{% url 'user_page' post.user.username %}">u/{{post.user.username}}</a>
+                </div>
+                {% if request.user == post.user %}
+                <div class="ms-auto">
+                      <button type="button" class="btn delete-post" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-post-id="{{post.id}}"><i class="bi bi-trash3"></i></button>
+               </div>
+               {% endif %}
             </div>
-            <div class="col-10 ml-2">
-              <h5 class="card-title mb-0">
-                <a href="{% url 'user_page' post.user.username%}" class="text-muted">u/{{post.user.username}}</a>
-                <small class="text-muted"> - </small>
-                <small class="text-muted"> {{post.created_at|timesince}}</small>
-              </h5>
-            </div>  
           </div>
-        </div>
         <div class="card-body">
           <h5 class="card-title">{{post.title}}</h5>
             <p class="card-text">
@@ -37,37 +35,77 @@
             </p>
         </div>
         <div class="card-footer text-muted">
-          {% if request.user.is_authenticated %}
-          <a class="btn btn-primary"
-            href="{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}"
-          >reply</a>
-          {% endif %}
-          <p class="my-2">Replies:</p>
-          <!-- Replies -->
-          {% if replies %} {% for reply in replies %}
-          <div class="media mt-4">
-            <img
-              src="{{reply.user.avatar.url}}"
-              class="mr-3 rounded-circle"
-              alt="{{reply.user.username}}"
-              width="40"
-              height="40"
-            />
-            <div class="media-body">
-              <h5 class="mt-0">u/{{reply.user.username}}</h5>
-              <p>{{reply.title}}</p>
-              <p>
-                {% if reply.content %}
-                  {{reply.content}}
-                {% elif reply.image%}
-                  <img src="{{reply.image.url}}" class="img-fluid" alt="{{reply.user.username}}">
-                {% endif %}
-            </p>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+                    <button id="{{ post.id }}like" class="btn btn-secondary btn-sm pb-2 mr-1 mb-0 {% if post.likestatus == True %}btn-success{% endif %}" onclick="likepost({{ post.id }})"> <i class="bi bi-caret-up"></i> </button>
+                    <span  class="btn btn-info btn-sm pb-2 mx-1 mb-0 remove-curser disabled" id="likes-{{ post.id }}">{{ post.countlikes }}</span>
+                    <button id="{{ post.id }}dislike" class="btn btn-secondary btn-sm pt-2 ml-1 mb-0 {% if post.likestatus == False %} btn-danger{% endif %}" onclick="dislikepost({{ post.id }})"><i class="bi bi-caret-down"></i></button>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button id="{{ post.id }}comment" class="btn btn-info btn-sm pt-1 mb-0" onclick="location.href='{% url 'create_reply' room_name=post.room.name post_id=post.id post_slug=post.slug %}'"><i class="bi bi-reply-fill"></i> {{ post.num_replies }} </button>
+                </div>
+                <div class="d-flex align-self">
+                    <p class="align-self-center mb-0 small-p">{{post.created_at|timesince}} ago</p>
+                </div>
             </div>
-          </div>
-          {% endfor %} {% endif %}
         </div>
       </div>
+      {% if replies %}
+        <h5 class="h5"> Replies ({{replies.count}}) </h5>
+            {% for reply in replies %}
+                <div class="card my-1">
+                    <div class="card-header header-reply">
+                      <div class="d-flex mb-1">
+                          <div class="px-2">
+                            <a href="{% url 'user_page' reply.user.username %}">
+                              <img class="card-image mr-4" src="{{reply.user.avatar.url}}" alt="{{reply.user.username}}" >
+                              </a>
+                          </div>
+                          <div class="px-2">
+                              <a class="nav-link mt-3 pl-5" href="{% url 'user_page' reply.user.username %}">u/{{reply.user.username}}</a>
+                          </div>
+                          {% if request.user == reply.user %}
+                          <div class="ms-auto">
+                            <button type="button" class="btn delete-post" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-post-id="{{post.id}}"><i class="bi bi-trash3"></i></button>
+                         </div>
+                         {% endif %}
+                      </div>
+                    </div>      
+                    <div class="card-body">
+                      <div class="card-title"> <h6 class="h6"> {{reply.title}} </h6></div>
+                          {% if reply.content%}
+                            <p class="small-p"> {{reply.content}}</p>
+                          {% else %}
+                            <img class="img-fluid" src="{{reply.image.url}}" alt="">
+                          {% endif %}
+                    </div>
+                        <div class="card-footer text-muted">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <button id="{{ reply.id }}like" class="btn btn-secondary btn-sm pb-2 mr-1 mb-0 {% if reply.likestatus == True %}btn-success{% endif %}" onclick="likereply({{ reply.id }})"> <i class="bi bi-caret-up"></i> </button>
+                                    <span  class="btn btn-info btn-sm pb-2 mx-1 mb-0 remove-curser disabled" id="likes-{{ reply.id }}">{{ reply.countlikes }}</span>
+                                    <button id="{{ reply.id }}dislike" class="btn btn-secondary btn-sm pt-2 ml-1 mb-0 {% if reply.likestatus == False %} btn-danger{% endif %}" onclick="dislikereply({{ reply.id }})"><i class="bi bi-caret-down"></i></button>
+                                </div>
+                                <div class="ms-auto">
+                                    <p class="align-self-center mb-0 small-p">{{reply.created_at|timesince}} ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+            <div class="my-5 py-5"></div>
+        {% else %}
+            <h5 class="h5"> Replies (0) </h5>
+        {% endif %}
     </div>
+  </div>
+  <div class="col-2 sticky-top main removable">
+    <div class="card mt-3">
+        <img src="{{post.room.avatar.url}}" class="card-img-top" alt="{{post.room.name}}">
+        <div class="card-footer">
+          <h3 class="h3"> <a class="nav-link" href="{% url 'room' post.room.name%}">r/{{post.room.name}}</a></h3>
+        </div>
+    </div>
+  <div>
 </div>
 {% endblock content %}

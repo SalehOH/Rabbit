@@ -1,3 +1,9 @@
+body{
+    background-color: #f3f3f3;
+}
+.bg-custom{
+    background-color: #f3f3f3;
+}
 .hide-btn{
     display: none;
 }
@@ -28,6 +34,9 @@
 }
 .card-header{
     background-color:#e0eff0;
+}
+.header-reply {
+    background-color: #ebe0e0fd;
 }
 .main{
     padding-top: 50px;

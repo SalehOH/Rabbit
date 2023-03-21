@@ -1,6 +1,8 @@
 # Rabbit
 ## In order to run this web app:
 
+  ### Do not use Chrome browser, better use Edge!
+
   ### Launch anaconda 
   ### Navigate to the app directory
   ### Run the following commands:

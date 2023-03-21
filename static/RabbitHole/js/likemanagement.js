@@ -79,6 +79,7 @@ function dislikereply(replyID) {
 }
 
 const posts = document.getElementById("posts")
+const replies = document.getElementById("replies")
 const confirmDeleteBtn = document.getElementById("confirm-delete")
 
 if (posts){
@@ -87,6 +88,15 @@ if (posts){
     console.log(parent)
     if(parent.classList.contains("delete-post")){
       confirmDeleteBtn.setAttribute("href",`/delete_post/${parent.dataset.postId}`)
+    }
+  })
+}
+if(replies){
+  posts.addEventListener("click", function(e){
+    const parent = e.target.parentElement
+    console.log(parent)
+    if(parent.classList.contains("delete-post")){
+      confirmDeleteBtn.setAttribute("href",`/delete_reply/${parent.dataset.replyID}`)
     }
   })
 }

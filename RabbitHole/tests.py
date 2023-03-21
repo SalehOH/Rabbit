@@ -13,16 +13,16 @@ class RoomViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
-            username='testuser', email='test@example.com', password='testpass'
+            username='testuser', email='test@example.com', password='testpass', avatar='default_avatars\default.png'
         )
         self.room = Room.objects.create(
-            name='testroom', avatar='room-avatar.jpg', creator=self.user
+            name='testroom', avatar='default_avatars\default.png', creator=self.user
         )
         self.post = Post.objects.create(
-            content='test post content', room=self.room, user=self.user
+            title='test post content', image='default_avatars\default.png', room=self.room, user=self.user
         )
         self.reply = Reply.objects.create(
-            content='test reply content', post=self.post, user=self.user
+            title='test reply content', content='test reply content', post=self.post, user=self.user, image='default_avatars\default.png'
         )
 
 
@@ -55,15 +55,18 @@ class RoomViewTest(TestCase):
 
     def test_create_post_view(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('create_post', args=[self.room.name]), {'content': 'test post content'})
+        response = self.client.post(reverse('create_post', args=[self.room.name]), {'title': 'test post content'})
+        self.assertEqual(response.status_code, 302)
+    
+        response = self.client.get(response.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Post.objects.filter(content='test post content').exists())
+        self.assertTrue(Post.objects.filter(title='test post content').exists())
 
     def test_create_reply_view(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('create_reply', args=[self.room.name, self.post.id, self.post.slug]), {'content': 'test reply content'})
+        response = self.client.post(reverse('create_reply', args=[self.room.name, self.post.id, self.post.slug]), {'title': 'test reply content'})
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(Reply.objects.filter(content='test reply content').exists())
+        self.assertTrue(Reply.objects.filter(title='test reply content').exists())
 
     def test_like_post_view(self):
         self.client.login(username='testuser', password='testpass')

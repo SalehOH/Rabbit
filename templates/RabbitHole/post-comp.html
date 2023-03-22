@@ -30,7 +30,7 @@
                 <div class="card-body clickable text-justify" onclick="location.href='{% url 'post' room_name=post.room.name post_id=post.id post_slug=post.slug %}'">
                   <div class="card-title font-weight-bold">{{post.title}}</div>
                       {% if post.content%}
-                        <p class="text-muted small-p text-justify"> {{post.content}}</p>
+                        <p class="text-muted small-p text-justify"> {{ post.content|truncatewords:70 }}</p>
                       {% elif post.image %}
                         <img class="img-fluid" src="{{post.image.url}}" alt="">
                       {% endif %}
@@ -50,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
         {% endfor %}
     {% else %}
         <div class="card my-3">

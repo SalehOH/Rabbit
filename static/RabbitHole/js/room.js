@@ -20,8 +20,9 @@ async function joinRoom(roomName, userId) {
       headers: {"Content-Type": "application/json"},
     });
     if (response.ok) {
+      console.log("ok")
       joinBtn.remove();
-      members.insertAdjacentHTML("beforeend", await get_user('admin'));
+      members.insertAdjacentHTML("beforeend", (async () => await get_user('admin')));
     } else {
         throw new Error("Error while joining the room");
     }

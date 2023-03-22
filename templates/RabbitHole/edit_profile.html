@@ -1,0 +1,26 @@
+{% extends 'RabbitHole/base.html' %} {% load static %} 
+{% block head %}
+  <link rel="stylesheet" href="{% static 'RabbitHole/css/test.css' %}">
+{% endblock head %}
+{% block title %}Edit Profile{% endblock title %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    Edit Profile
+  </div>
+  <div class="card-body">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'edit_profile' request.user.username %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <img src="{{ user.avatar.url }}" class="img-thumbnail mb-3" alt="User Avatar">
+        <input type="file" class="form-control" id="avatar" name="avatar">
+      </div>
+      <div class="mb-3">
+        <label for="bio" class="form-label">Bio</label>
+        <textarea class="form-control" id="bio" name="bio" rows="3">{{ request.user.bio }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}

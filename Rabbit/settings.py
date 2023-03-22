@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,10 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-5uk-_f6vm4rofzqxnqh+058r@!k*9ytbd11((jz1&vb(24h^hy"
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') == '1'
 
 ALLOWED_HOSTS = []
 
@@ -156,8 +156,8 @@ ACCOUNT_USERNAME_MIN_LENGTH = 5
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': "",
-            'secret': "",
+            'client_id': os.environ.get('CLIENT_ID'),
+            'secret': os.environ.get('SECRET_AUTH_API'),
             'key': ''
         },
         'SCOPE': [
@@ -171,7 +171,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+#Custom Allauth Forms
 ACCOUNT_FORMS = {
     'signup': 'authentication.forms.CustomSignupForm',
     'login': 'authentication.forms.CustomLoginForm'
+}
+SOCIALACCOUNT_FORMS = {
+    'signup': 'authentication.forms.CustomSocialSignupForm'
 }

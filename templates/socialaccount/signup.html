@@ -1,0 +1,36 @@
+{% extends "RabbitHole/base.html" %} {% load i18n %} 
+{% block title %}Sign up{% endblock title %}
+{% block content %}
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ error|escape }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+<div class="card my-5">
+  <div class="card-header text-center">Continue signing up with google</div>
+    <div class="card-body">
+      <div class="container-sm">
+        <form class="signup" id="signup_form" method="post" enctype="multipart/form-data" action="{% url 'socialaccount_signup' %}">
+            {% csrf_token %}                  
+              {% for feild in form %}
+                  {{feild.label}}
+                  <div class="input-group mb-3">
+                    {{feild}}
+                  </div>
+              {% endfor %}
+            {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            <div class="mt-5 text-center">
+              <button type="submit" class="w-50 btn btn-lg btn-outline-primary text-center">Complate Sign up</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock content%}

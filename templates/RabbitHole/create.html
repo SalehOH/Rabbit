@@ -7,8 +7,16 @@
 {% endblock head %}
 {% block title %}Create{% endblock title %}
 {% block content %}
+{% if form.name.errors %}
+    {% for error in form.name.errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+{% endif %}
 <div class"m-5" style="text-align: center; margin-top: 40px">
-  <h1>Create {{name}}</h1>
+  <h1>Create {% if name == 'Room' %} a Rabbit Hole {% else %} {{name}} {% endif %}</h1>
 </div>
 {% if name == 'Room'%}
     <form method="post" enctype="multipart/form-data" action="{% url 'create_room'%}">
@@ -26,7 +34,7 @@
               {% if name != 'Room'%}
                   <button id="submit-btn" class="btn btn-primary hidden" type="submit">submit</button>
 
-                  <p>
+                  <p class="mt-2">
                     Would you like to publish a text or an image?
                   </p>
                   <span class="option" data-func='text' style=" cursor: pointer;"> 

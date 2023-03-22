@@ -8,8 +8,11 @@
   <div class="text-center my-5">
       <img class="img-fluid rounded-circle mb-4" src="{{user.avatar.url}}" alt="{{user.username}}" style="width: 10%;" />
       <h1 class="text-white fs-3 fw-bolder">u/{{user.username}}</h1>
+      {% if user.bio != 'None'%}
+        <p class="text-white fs-5 pt-5 pb-2"> {{user.bio }}</p>
+      {% endif %}
       {% if request.user == user %}
-        <button class="btn btn-primary btn mt-3">Edit rabbit profile</button>
+        <button class="btn btn-primary btn mt-3" onclick="location.href ='{% url 'edit_profile' user.username %}'">Edit rabbit profile</button>
       {% endif %}
   </div>
 </header>

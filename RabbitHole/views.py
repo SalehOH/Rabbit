@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.db.models import Q, Count
 
 from .models import Room, Post, Reply, Like
-from .forms import RoomForm, PostForm, ReplyForm
+from .forms import RoomForm, PostForm, ReplyForm, UserForm
 from .helper import like_helper, dislike_helper, post_likes_status, reply_likes_status
 
 User = get_user_model()
@@ -181,3 +181,17 @@ def user(request, username):
     post_likes_status(request, posts)
     context = {'user': user,'posts': posts,}
     return render(request, 'RabbitHole/user.html', context)
+
+@login_required 
+def edit_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    if request.user == user:
+        if request.method == 'POST':
+           form = UserForm(request.POST, request.FILES, instance=user)
+           if form.is_valid():
+               form.save()
+               return redirect('user_page', username)
+        else:
+           form = UserForm(instance=user)
+
+    return render(request, 'RabbitHole/edit_profile.html', {'form': form})

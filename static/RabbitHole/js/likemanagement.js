@@ -79,14 +79,25 @@ function dislikereply(replyID) {
 }
 
 const posts = document.getElementById("posts")
+const replies = document.getElementById("replies")
 const confirmDeleteBtn = document.getElementById("confirm-delete")
 
 if (posts){
   posts.addEventListener("click", function(e){
     const parent = e.target.parentElement
-    console.log(parent)
+    console.log("got it")
     if(parent.classList.contains("delete-post")){
+      console.log("went")
       confirmDeleteBtn.setAttribute("href",`/delete_post/${parent.dataset.postId}`)
+    }
+  })
+}
+
+if(replies){
+  replies.addEventListener("click", function(e){
+    const parent = e.target.parentElement
+    if(parent.classList.contains("delete-reply")){
+      confirmDeleteBtn.setAttribute("href",`/delete_reply/${parent.dataset.replyId}`)
     }
   })
 }

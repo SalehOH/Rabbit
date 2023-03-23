@@ -1,6 +1,14 @@
 {% extends 'RabbitHole/base.html' %}{% load static %}{% load account socialaccount %}
 {% block title %}Sign up{% endblock title %}
 {% block content %}
+{% if form.non_field_errors%}
+  {% for erorr in  form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{erorr}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+{% endif %}
 <div class="card">
   <div class="card-header text-center">Login with Rabbit</div>
     <div class="card-body">
@@ -22,7 +30,6 @@
                   {{feild}}
                 </div>
               {% endfor %}
-            </div>
             <div class="mt-5 text-center">
               <button type="submit" class="w-50 btn btn-lg btn-outline-primary text-center">Login</button>
             </div>

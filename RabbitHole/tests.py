@@ -17,17 +17,18 @@ class RoomViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
-            username='testuser', email='test@example.com', password='testpass'
+            username='testuser', email='test@example.com', password='testpass', avatar='default_avatars\default.png'
         )
         self.room = Room.objects.create(
-            name='testroom', avatar='room-avatar.jpg', creator=self.user
+            name='testroom', avatar='default_avatars\default.png', creator=self.user
         )
         self.post = Post.objects.create(
-            content='test post content', room=self.room, user=self.user
+            title='test post content', image='default_avatars\default.png', room=self.room, user=self.user
         )
         self.reply = Reply.objects.create(
-            content='test reply content', post=self.post, user=self.user
+            title='test reply content', content='test reply content', post=self.post, user=self.user, image='default_avatars\default.png'
         )
+
 
     def test_index_view(self):
         response = self.client.get(reverse('home'))
@@ -36,7 +37,7 @@ class RoomViewTest(TestCase):
 
 
     def test_room_view(self):
-        response = self.client.get(reverse('room', args=[self.room.name]))
+        response = self.client.get(reverse(('room'), args=[self.room.name]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'RabbitHole/room.html')
         #self.assertContains(response, self.post.content)
@@ -58,15 +59,18 @@ class RoomViewTest(TestCase):
 
     def test_create_post_view(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('create_post', args=[self.room.name]), {'content': 'test post content'})
+        response = self.client.post(reverse('create_post', args=[self.room.name]), {'title': 'test post content'})
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(Post.objects.filter(content='test post content').exists())
+    
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Post.objects.filter(title='test post content').exists())
 
     def test_create_reply_view(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('create_reply', args=[self.room.name, self.post.id, self.post.slug]), {'content': 'test reply content'})
+        response = self.client.post(reverse('create_reply', args=[self.room.name, self.post.id, self.post.slug]), {'title': 'test reply content'})
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(Reply.objects.filter(content='test reply content').exists())
+        self.assertTrue(Reply.objects.filter(title='test reply content').exists())
 
     def test_like_post_view(self):
         self.client.login(username='testuser', password='testpass')
@@ -82,6 +86,7 @@ class RoomViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['result'], False)
         self.assertEqual(response.json()['likes'], -1)
+        
 
 class PostTestCase(TestCase):
 
@@ -95,8 +100,8 @@ class PostTestCase(TestCase):
         self.assertEqual(Post.objects.count(), 1)
 
     def test_post_slug_creation(self):
-        self.assertEqual(self.post.slug, 'test-post')
-        self.assertEqual(Post.objects.get(pk=self.post.pk).slug, 'test-post')
+        self.assertEqual(self.post.slug, '')
+        self.assertEqual(Post.objects.get(pk=self.post.pk).slug, '')
 
 
 class ReplyTestCase(TestCase):

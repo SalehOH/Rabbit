@@ -21,7 +21,7 @@ def room_avatar_filename(instance, filename):
 
 class Room(models.Model):
     name = models.CharField(_("name"), max_length=30, unique=True,)
-    avatar = models.ImageField(upload_to=room_avatar_filename)
+    avatar = models.ImageField(upload_to=room_avatar_filename, blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_rooms')
 
     participants = models.ManyToManyField(User, related_name='rooms_participated_in')

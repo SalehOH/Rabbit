@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-5uk-_f6vm4rofzqxnqh+058r@!k*9ytbd11((jz1&vb(24h^hy"
+SECRET_KEY = 'django-insecure-g$l@v0_!(x(%^mh(ezocnrn4yzb#+v5y8odc=0mp7zh1vy3l9)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -156,8 +156,8 @@ ACCOUNT_USERNAME_MIN_LENGTH = 5
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': "",
-            'secret': "",
+            'client_id': '',
+            'secret': '',
             'key': ''
         },
         'SCOPE': [
@@ -165,13 +165,18 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'prompt': 'select_account',
-            'access_type': 'online',
+            'access_type': 'offline',
         },
         'LOGIN_PARAMS': {'auth_type': 'reauthenticate'},
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+#Custom Allauth Forms
 ACCOUNT_FORMS = {
     'signup': 'authentication.forms.CustomSignupForm',
     'login': 'authentication.forms.CustomLoginForm'
+}
+SOCIALACCOUNT_FORMS = {
+    'signup': 'authentication.forms.CustomSocialSignupForm'
 }

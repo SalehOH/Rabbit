@@ -1,8 +1,39 @@
 from allauth.account.forms import SignupForm, LoginForm
+from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django.contrib.auth import get_user_model
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
+
+class CustomSocialSignupForm(SocialSignupForm):
+    username = forms.CharField(label=_('Username'), max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}))
+    avatar = forms.ImageField(label=_('Avatar'), required=True, widget=forms.ClearableFileInput(attrs={'class': 'form-control',}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget = forms.HiddenInput()
+        self.fields['email'].label = ''
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        username = username.lower()
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError(_('This username is already taken.'))
+        return username
+    
+    def clean_avatar(self):
+       avatar = self.cleaned_data.get('avatar')
+       if not avatar:
+           raise forms.ValidationError('Please upload an avatar.')
+       return avatar
+    
+    def save(self, request):
+        user = super(CustomSocialSignupForm, self).save(request)
+        user.username = self.cleaned_data['username']
+        user.avatar = self.cleaned_data['avatar']
+        user.save()
+        return user
 
 class CustomSignupForm(SignupForm):
     avatar = forms.ImageField(label='Avatar', required=False)
@@ -21,7 +52,18 @@ class CustomSignupForm(SignupForm):
                 widget.attrs.update({'placeholder': attrs[field_name][0], 'class': attrs[field_name][1]})
             widget.attrs.update(attrs)
             widget.attrs.pop('autofocus', None)
-        
+
+    def clean_avatar(self):
+       avatar = self.cleaned_data.get('avatar')
+       if not avatar:
+           raise forms.ValidationError('Please upload an avatar.')
+       return avatar
+    
+    def save(self, request):
+        user = super().save(request)
+        user.avatar = self.cleaned_data['avatar']
+        user.save()
+        return user 
 
 class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):

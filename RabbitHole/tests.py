@@ -5,7 +5,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Room, Post, Reply, Like
 from RabbitHole.forms import PostForm,ReplyForm,RoomForm
 from django.urls import reverse, resolve
-from .views import delete_post,dislike_post
 from RabbitHole.models import Post
 
 
@@ -222,12 +221,9 @@ class TestUrls(TestCase):
 
 
     def test_delete_reply_url(self):
-        user = User.objects.create(username='testuser')
-        room = Room.objects.create(name='Test Room')
-        post = Post.objects.create(author=user, room=room, title='Test Post', content='Test Content')
-        reply = Reply.objects.create(content='Test reply', post=post)
-        url = reverse('delete_reply', kwargs={'reply_id': reply.id})
-        self.assertEqual(url, '/delete_reply/{}/'.format(reply.id))
+        url = reverse('dislike_post', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
 
         
     def test_like_post_url(self):

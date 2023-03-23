@@ -51,16 +51,20 @@
     <div class="col-2 sticky-top main removable">
         <div class="card mt-3">
             {% if request.user.is_authenticated %}
-                <img src="{{request.user.avatar.url}}" class="card-img-top" alt="{{request.user.username}}">
-                <div class="card-title h3 mt-2">u/{{request.user.username}}</div>
+
+
+                <img class="card-img-top" alt="...">
+                <div class="card-title h3 mt-2">...</div>
                 <div class="card-body">
-                    <button class="btn btn-secondary btn w-100"  onclick="location.href ='{% url 'edit_profile' request.user.username %}'">Edit rabbit profile</button>
-                    <button class="btn btn-secondary btn mt-2 w-100" onclick="location.href = '{% url 'create_room'%}'">Create a rabbit hole</button>
+                    <button class="btn btn-secondary btn w-100"          onclick="location.href ='{% url 'edit_profile' request.user.username %}'">Edit rabbit profile</button>
+                    <button class="btn btn-secondary btn mt-2 w-100"     onclick="location.href = '{% url 'create_room'%}'">Create a rabbit hole</button>
+
+                    
             {% else %}
                 <div class="h4 px-2 mt-2">Oh no, you're not logged in</div>
                 <div class="card-body">
-                    <button onclick="location.href = '{% url 'account_login' %}'" class="btn bbtn-secondary btn w-100">Sign-in</button>
-                    <button onclick="location.href = '{% url 'account_signup' %}'" class="btn btn-secondary btn w-100">Sign-up</button>
+                    <button onclick="location.href = '{% url 'account_login' %}'" class="btn btn-secondary btn w-100">Sign-in</button>
+                    <button onclick="location.href = '{% url 'account_signup' %}'" class="btn btn-secondary btn w-100 mt-2">Sign-up</button>
                 </div>
                 {% endif %}
             </div>

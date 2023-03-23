@@ -6,6 +6,8 @@ from .models import Room, Post, Reply, Like
 from RabbitHole.forms import PostForm,ReplyForm,RoomForm
 from django.urls import reverse, resolve
 from RabbitHole.models import Post
+from . import views
+
 
 
 User = get_user_model()
@@ -141,13 +143,16 @@ class RoomTestCase(TestCase):
 
 
 class RoomFormTest(TestCase):
-    def test_form(self):
-        data = {
-            'name': 'test name',
-                'avatar': 'default.png'}
-        
-        form = RoomForm(data=data)
-        self.assertTrue(form.is_valid())
+    
+  def test_form(self):
+    data = {
+        'name': 'testname',
+        'avatar': SimpleUploadedFile('default.png', content=b'\x00' * 1024, content_type='image/png'),
+    }
+    
+    form = RoomForm(data=data, files={'avatar': data['avatar']})
+    self.assertEqual(form.errors, {})
+
 
     
 
@@ -173,6 +178,8 @@ class ReplyFormTest(TestCase):
 
 class TestUrls(TestCase):
     
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
 
     def test_home_url(self):
         url = reverse('home')
@@ -184,7 +191,7 @@ class TestUrls(TestCase):
         self.assertEquals(resolve(url).func, views.search)
 
     def test_user_page_url(self):
-        url = reverse('user_page')
+        url = reverse('user_page', args=[self.user.username])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 

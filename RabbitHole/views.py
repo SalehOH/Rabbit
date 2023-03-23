@@ -64,6 +64,7 @@ def create_room(request):
             room = form.save(commit=False)
             room.creator = request.user
             room.save()
+            room.participants.add(request.user)
             messages.success(request, 'Room created successfully!')
             return redirect('room', room_name=room.name)
     else:

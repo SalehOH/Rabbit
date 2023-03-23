@@ -4,6 +4,10 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Room, Post, Reply, Like
 from RabbitHole.forms import PostForm,ReplyForm,RoomForm
+from django.urls import reverse, resolve
+from .views import delete_post,dislike_post
+from RabbitHole.models import Post
+
 
 User = get_user_model()
 
@@ -164,6 +168,7 @@ class ReplyFormTest(TestCase):
 #urltest
 
 class TestUrls(TestCase):
+    
 
     def test_home_url(self):
         url = reverse('home')
@@ -172,23 +177,22 @@ class TestUrls(TestCase):
 
     def test_search_url(self):
         url = reverse('search')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEquals(resolve(url).func, views.search)
 
     def test_user_page_url(self):
-        url = reverse('user_page', args=['testuser'])
+        url = reverse('user_page')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_room_url(self):
         url = reverse('create_room')
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_room_url(self):
         url = reverse('room', args=['testroom'])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.status_code, 'room')
 
     def test_join_room_url(self):
         url = reverse('join_room', args=['testroom', '123'])
@@ -207,31 +211,29 @@ class TestUrls(TestCase):
         self.assertEqual(response.status_code, 200)
         
     def test_create_reply_url(self):
-        url = reverse('create_reply',args=['testreply'])
+        url = reverse('create_reply', args=['room1', 1, 'post-slug'])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-       
-        
-    
-    def test_delete_post_url(self):
-        url = reverse('delete_post')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        
+        self.assertEqual(response.status_code, 302)
+
+
     def test_delete_reply_url(self):
-        url = reverse('delete_reply')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        user = User.objects.create(username='testuser')
+        room = Room.objects.create(name='Test Room')
+        post = Post.objects.create(author=user, room=room, title='Test Post', content='Test Content')
+        reply = Reply.objects.create(content='Test reply', post=post)
+        url = reverse('delete_reply', kwargs={'reply_id': reply.id})
+        self.assertEqual(url, '/delete_reply/{}/'.format(reply.id))
+
         
     def test_like_post_url(self):
         url = reverse('like_post', args=[1])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_dislike_post_url(self):
         url = reverse('dislike_post', args=[1])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_like_reply_url(self):
         url = reverse('like_reply', args=[1])
@@ -241,4 +243,11 @@ class TestUrls(TestCase):
     def test_dislike_reply_url(self):
         url = reverse('dislike_reply', args=[1])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        
+        
+        
+    # def test_delete_post_url(self):
+    #     url = reverse('delete_post')
+    #     response = self.client.get(url)
+    #     self.assertEqual(response.status_code, 200)

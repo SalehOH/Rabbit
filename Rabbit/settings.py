@@ -1,5 +1,5 @@
 from pathlib import Path
-import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,10 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure-g$l@v0_!(x(%^mh(ezocnrn4yzb#+v5y8odc=0mp7zh1vy3l9)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == '1'
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -156,8 +156,8 @@ ACCOUNT_USERNAME_MIN_LENGTH = 5
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': os.environ.get('CLIENT_ID'),
-            'secret': os.environ.get('SECRET_AUTH_API'),
+            'client_id': '',
+            'secret': '',
             'key': ''
         },
         'SCOPE': [
@@ -165,7 +165,7 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'prompt': 'select_account',
-            'access_type': 'online',
+            'access_type': 'offline',
         },
         'LOGIN_PARAMS': {'auth_type': 'reauthenticate'},
         'OAUTH_PKCE_ENABLED': True,

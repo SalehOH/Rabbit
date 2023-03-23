@@ -8,7 +8,7 @@ User = get_user_model()
 
 class CustomSocialSignupForm(SocialSignupForm):
     username = forms.CharField(label=_('Username'), max_length=20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}))
-    avatar = forms.ImageField(label='Avatar', required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control',}))
+    avatar = forms.ImageField(label=_('Avatar'), required=True, widget=forms.ClearableFileInput(attrs={'class': 'form-control',}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,7 +21,13 @@ class CustomSocialSignupForm(SocialSignupForm):
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError(_('This username is already taken.'))
         return username
-
+    
+    def clean_avatar(self):
+       avatar = self.cleaned_data.get('avatar')
+       if not avatar:
+           raise forms.ValidationError('Please upload an avatar.')
+       return avatar
+    
     def save(self, request):
         user = super(CustomSocialSignupForm, self).save(request)
         user.username = self.cleaned_data['username']
@@ -46,6 +52,12 @@ class CustomSignupForm(SignupForm):
                 widget.attrs.update({'placeholder': attrs[field_name][0], 'class': attrs[field_name][1]})
             widget.attrs.update(attrs)
             widget.attrs.pop('autofocus', None)
+
+    def clean_avatar(self):
+       avatar = self.cleaned_data.get('avatar')
+       if not avatar:
+           raise forms.ValidationError('Please upload an avatar.')
+       return avatar
     
     def save(self, request):
         user = super().save(request)

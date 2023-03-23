@@ -1,14 +1,12 @@
 {% extends 'RabbitHole/base.html' %}{% load static %}{% load account socialaccount %}
 {% block title %}Sign up{% endblock title %}
 {% block content %}
-{% if form.errors %}
-    {% for field in form %}
-        {% for error in field.errors %}
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              {{ error|escape }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
+{% if form.non_field_errors%}
+  {% for erorr in  form.non_field_errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{erorr}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     {% endfor %}
 {% endif %}
 <div class="card">

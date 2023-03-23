@@ -14,20 +14,26 @@ User = get_user_model()
 
 def index(request):
     rooms = Room.objects.annotate(members=Count('participants')).order_by('-members')
+    q = request.GET.get('q')
     
-    if not request.user.is_anonymous:
-        posts = Post.objects.filter(room__in=Room.objects.filter(
-            Q(participants__id=request.user.id) |
-            Q(creator=request.user)
-        ))
-        if len(posts) < 1:
-            posts = Post.objects.all()
+    if q:
+        if q == 'hot':
+            posts = Post.objects.annotate(num_replies=Count('replies')).order_by('-num_replies')
+        elif q == 'new':
+            posts = Post.objects.all().order_by('-created_at')
     else:
-        posts = Post.objects.all()
-    
-    posts = posts.order_by('-created_at')
-    post_likes_status(request, posts)
+        if not request.user.is_anonymous:
+            posts = Post.objects.filter(room__in=Room.objects.filter(
+                Q(participants__id=request.user.id) |
+                Q(creator=request.user)
+            ))
+            if len(posts) < 1:
+                posts = Post.objects.all()
+        else:
+            posts = Post.objects.all()
+        posts = posts.order_by('-created_at')
 
+    post_likes_status(request, posts)
     context = {'posts': posts, 'rooms': rooms, 'page': 'home'}
     return render(request, 'RabbitHole/index.html', context)
 

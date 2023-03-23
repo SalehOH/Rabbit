@@ -4,7 +4,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Rabbit.settings')
 import django
 django.setup()
 from RabbitHole.models import Room, Post, User, Reply
-from django.templatetags.static import static
+
 
 import random
 import string

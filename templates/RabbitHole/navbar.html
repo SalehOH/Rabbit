@@ -21,8 +21,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           {%if page == 'home' %}
             <ul class="navbar-nav p-1">
-              <li class="nav-item"><a class="nav-link" href="">Hot</a></li>
-              <li class="nav-item"><a class="nav-link" href="">New</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'home' %}?q=hot">Hot</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'home' %}?q=new">New</a></li>
             </ul>
             <ul class="navbar-nav mx-auto remove-serach">
                 <!-- Search Input -->
@@ -46,6 +46,12 @@
                         {% endif %}
                     {% endif %}                      
                   </li>
+                   <li class="nav-item hid-btn">
+                        <a class="nav-link hide-btn" href="{% url 'user_page' request.user.username%}">
+                          <img class="room-list-image" src="{{request.user.avatar.url}}" alt="{{request.user.username}}">
+                          <span class="mx-2">u/{{request.user.username}}</span>
+                        </a>
+                   </li>
                    <li class="nav-item">
                     <a class="nav-link" href="{% url 'account_logout'%}">Logout</i></a>
                   </li>

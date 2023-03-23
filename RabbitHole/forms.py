@@ -19,8 +19,13 @@ class RoomForm(forms.ModelForm):
             raise forms.ValidationError('Room name can only contain letters.')
         if ' ' in name:
             raise forms.ValidationError('Room name cannot contain whitespace.')
-        return name
-        
+        return name.lower()
+    
+    def clean_avatar(self):
+       avatar = self.cleaned_data.get('avatar')
+       if not avatar:
+           raise forms.ValidationError('Please upload an avatar.')
+       return avatar   
 
 class PostForm(forms.ModelForm):
     class Meta:

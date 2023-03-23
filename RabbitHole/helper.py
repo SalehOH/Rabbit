@@ -43,7 +43,7 @@ def dislike_helper(request, model, name):
         if name == 'post':
             like = Like.objects.create(user=request.user, post=model, isdislike=True)
         else:
-            like = Like.objects.create(user=request.user, room=model, isdislike=True)
+            like = Like.objects.create(user=request.user, reply=model, isdislike=True)
         data["result"] = False
     model.save()
 

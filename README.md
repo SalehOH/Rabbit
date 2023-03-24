@@ -1,6 +1,7 @@
 # Rabbit
-!\[my badge\](https://badgen.net/badge/hello/world/red?icon=twitter)
-
+![django-allauth](https://badgen.net/badge/python/django-allauth/green?icon=pypy)
+![pillow](https://badgen.net/badge/python/pillow/green?icon=pypy) 
+![bootstarp](https://badgen.net/badge/bootstarp/Bootstap5/purple?icon=pypy)
 
 ## In order to run this web app:
 

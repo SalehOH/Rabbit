@@ -93,16 +93,16 @@ class PostTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='password')
-        self.room = Room.objects.create(name='Test Room', avatar=SimpleUploadedFile("room_avatar.png", b"file_content"), creator=self.user)
-        self.post = Post.objects.create(content='Test Post', room=self.room, user=self.user)
+        self.room = Room.objects.create(name='TestRoom', avatar=SimpleUploadedFile("room_avatar.png", b"file_content"), creator=self.user)
+        self.post = Post.objects.create(title='Test Post', room=self.room, user=self.user)
 
     def test_post_creation(self):
-        self.assertEqual(str(self.post), 'Test Post')
+        self.assertEqual(self.post.title, 'Test Post')
         self.assertEqual(Post.objects.count(), 1)
 
     def test_post_slug_creation(self):
-        self.assertEqual(self.post.slug, '')
-        self.assertEqual(Post.objects.get(pk=self.post.pk).slug, '')
+        self.assertEqual(self.post.slug, 'test-post')
+        self.assertEqual(Post.objects.get(pk=self.post.pk).slug, 'test-post')
 
 
 class ReplyTestCase(TestCase):
@@ -110,8 +110,8 @@ class ReplyTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='password')
         self.room = Room.objects.create(name='Test Room', avatar=SimpleUploadedFile("room_avatar.png", b"file_content"), creator=self.user)
-        self.post = Post.objects.create(content='Test Post', room=self.room, user=self.user)
-        self.reply = Reply.objects.create(content='Test Reply', post=self.post, user=self.user)
+        self.post = Post.objects.create(title='Test Post', room=self.room, user=self.user)
+        self.reply = Reply.objects.create(title='Test Reply', post=self.post, user=self.user)
 
     def test_reply_creation(self):
         self.assertEqual(str(self.reply), 'Test Reply')

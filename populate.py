@@ -55,12 +55,12 @@ def populate():
 
 
     rooms = [
-        {"name":"pharmacy", 'avatar': 'default_avatars\default.png', 'creator': users[0]['username'],},
-        {"name":"engineering", 'avatar': 'default_avatars\default.png', 'creator': users[0]['username']},
-        {"name":"computing", 'avatar': 'default_avatars\default.png', 'creator': users[1]['username']},
-        {"name":"mathematics", 'avatar': 'default_avatars\default.png', 'creator': users[1]['username']},
-        {"name":"psychology", 'avatar': 'default_avatars\default.png', 'creator': users[2]['username']},
-        {"name":"geography", 'avatar': 'default_avatars\default.png', 'creator': users[2]['username']}
+        {"name":"pharmacy", 'avatar': 'default_avatars\pharmacy.png', 'creator': users[0]['username'],},
+        {"name":"engineering", 'avatar': 'default_avatars\engineering.png', 'creator': users[0]['username']},
+        {"name":"computing", 'avatar': 'default_avatars\computing.png', 'creator': users[1]['username']},
+        {"name":"mathematics", 'avatar': 'default_avatars\mathematics.png', 'creator': users[1]['username']},
+        {"name":"psychology", 'avatar': 'default_avatars\psychology.png', 'creator': users[2]['username']},
+        {"name":"geography", 'avatar': 'default_avatars\geography.png', 'creator': users[2]['username']}
     ]
     posts = []
 

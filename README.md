@@ -1,4 +1,5 @@
 # Rabbit
+![Django](https://badgen.net/badge/python/Django/green?icon=pypy)
 ![django-allauth](https://badgen.net/badge/python/django-allauth/green?icon=pypy)
 ![pillow](https://badgen.net/badge/python/pillow/green?icon=pypy) 
 ![bootstarp](https://badgen.net/badge/bootstarp/Bootstap5/purple?icon=pypy)

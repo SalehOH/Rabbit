@@ -44,7 +44,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
-         return " ".join(self.content.split(" ")[:3])
+         return " ".join(self.title.split(" ")[:3])
     
 class Reply(models.Model):
     title = models.TextField(max_length=100, null=False)
@@ -61,11 +61,11 @@ class Reply(models.Model):
         verbose_name_plural = 'replies'
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(" ".join(self.content.split(" ")[:6]))
+        self.slug = slugify(" ".join(self.title.split(" ")[:6]))
         super(Reply, self).save(*args, **kwargs)
 
     def __str__(self):
-        return " ".join(self.content.split(" ")[:2])
+        return " ".join(self.title.split(" ")[:2])
     
 
 class Like(models.Model):

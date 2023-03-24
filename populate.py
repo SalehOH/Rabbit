@@ -55,29 +55,33 @@ def populate():
 
 
     rooms = [
-        {"name":"pharmacy", 'avatar': 'default_avatars\pharmacy.png', 'creator': users[0]['username'],},
-        {"name":"engineering", 'avatar': 'default_avatars\engineering.png', 'creator': users[0]['username']},
-        {"name":"computing", 'avatar': 'default_avatars\computing.png', 'creator': users[1]['username']},
-        {"name":"mathematics", 'avatar': 'default_avatars\mathematics.png', 'creator': users[1]['username']},
-        {"name":"psychology", 'avatar': 'default_avatars\psychology.png', 'creator': users[2]['username']},
-        {"name":"geography", 'avatar': 'default_avatars\geography.png', 'creator': users[2]['username']}
+        {"name":"pharmacy", 'avatar': 'default_avatars\pharmacy.png', 'creator': users[0]['username'], 'image': 'default_avatars\pills-and-tablets-.png',},
+        {"name":"engineering", 'avatar': 'default_avatars\engineering.png', 'creator': users[0]['username'], 'image': 'default_avatars\srobots.jpg',},
+        {"name":"computing", 'avatar': 'default_avatars\computing.png', 'creator': users[1]['username'], 'image': 'default_avatars\code.png',},
+        {"name":"mathematics", 'avatar': 'default_avatars\mathematics.png', 'creator': users[1]['username'], 'image': 'default_avatars\math_post.png',},
+        {"name":"psychology", 'avatar': 'default_avatars\psychology.png', 'creator': users[2]['username'], 'image': 'default_avatars\psychology_post.jpg',},
+        {"name":"geography", 'avatar': 'default_avatars\geography.png', 'creator': users[2]['username'], 'image': 'default_avatars\ASeeling-the-heat.jpg',}
     ]
     posts = []
 
     for user in users:
         add_user(user)
-    
+
+    count = 0
     for room in rooms:
         room_created = add_room(room)
         posts.append({"room": room_created, 'title':titles[room_created.name][0],  'content': postDict[titles[room_created.name][0]], 'user': users[0]['username'], 'image' : None})
         posts.append({"room": room_created, 'title':titles[room_created.name][1],  'content': postDict[titles[room_created.name][1]], 'user': users[1]['username'], 'image' : None})
+        posts.append({"room": room_created, 'title':titles[room_created.name][1],  'content': None, 'image': rooms[count]['image'], 'user': users[1]['username']})
         posts.append({"room": room_created, 'title':titles[room_created.name][2],  'content': postDict[titles[room_created.name][2]], 'user': users[2]['username'], 'image' : None})
+        count += 1
     
     for post in posts:
         post_created = add_post(post)
         for i in range(random.randint(2,9)):
             replyIndex = random.randint(0,59)
-            add_reply({'post':post_created, 'title':reply[replyIndex], 'content':reply[replyIndex], 'user': users[random.randint(0, 2)]['username']})
+            add_reply({'post':post_created, 'title':reply[replyIndex], 'content':None, 'image': None , 'user': users[random.randint(0, 2)]['username']})
+        add_reply({'post':post_created, 'title':reply[replyIndex], 'content':None, 'image': 'default_avatars\Rabbit.jpg', 'user': users[random.randint(0, 2)]['username']})
 
 
 def add_user(info_dict):
@@ -103,7 +107,7 @@ def add_post(info_dict):
 
 def add_reply(info_dict):
     user = User.objects.get(username=info_dict['user'])
-    reply = Reply.objects.create(post=info_dict['post'], user=user, title=info_dict['title'], content=info_dict['content'])
+    reply = Reply.objects.create(post=info_dict['post'], user=user, title=info_dict['title'], content=info_dict['content'], image=info_dict['image'])
     reply.save()
 
 if __name__ == '__main__': 
